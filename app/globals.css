@@ -1,101 +1,238 @@
 @import "tailwindcss";
 
+/* ─── Design tokens ──────────────────────────────────────────── */
 :root {
-  --base: #003556;
-  --secondary: #105785;
-  --accent: #5286AC;
-  --typography: #E0EBFC;
+  --base:        #001e35;
+  --secondary:   #0d4a77;
+  --accent:      #4a8fc4;
+  --accent-glow: #5aaee8;
+  --type:        #ddeeff;
+  --type-dim:    rgba(221,238,255,0.55);
+  --type-muted:  rgba(221,238,255,0.32);
+
+  /* Glass recipe */
+  --glass-bg:     rgba(0, 26, 50, 0.45);
+  --glass-border: rgba(90, 174, 232, 0.12);
+  --glass-blur:   28px;
+  --glass-shadow: 0 4px 60px rgba(0, 40, 80, 0.5);
 }
 
-* {
-  box-sizing: border-box;
-}
+/* ─── Reset ──────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
 
-html {
-  scroll-behavior: smooth;
-}
+html { scroll-behavior: smooth; }
 
 body {
-  background-color: #003556;
-  color: #E0EBFC;
+  background-color: var(--base);
+  color: var(--type);
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: #003556; }
-::-webkit-scrollbar-thumb { background: #5286AC; border-radius: 3px; }
+/* ─── Scrollbar ──────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--base); }
+::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 4px; }
 
-.glass-panel {
-  background: rgba(0, 53, 86, 0.4);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(82, 134, 172, 0.2);
+/* ─── Ambient orb animations ─────────────────────────────────── */
+@keyframes orb-a {
+  0%,100% { transform: translate(0,0) scale(1); }
+  30%     { transform: translate(40px,-30px) scale(1.06); }
+  70%     { transform: translate(-30px,40px) scale(0.96); }
+}
+@keyframes orb-b {
+  0%,100% { transform: translate(0,0) scale(1); }
+  50%     { transform: translate(-50px,25px) scale(1.09); }
+}
+@keyframes orb-c {
+  0%,100% { transform: translate(0,0); }
+  50%     { transform: translate(25px,-40px); }
+}
+
+.orb-1 { animation: orb-a 20s ease-in-out infinite; }
+.orb-2 { animation: orb-b 16s ease-in-out infinite; }
+.orb-3 { animation: orb-c 12s ease-in-out infinite; }
+
+/* ─── Glassmorphism ──────────────────────────────────────────── */
+/*
+  Three tiers:
+  .glass        – main cards
+  .glass-soft   – lighter panels (hero badge, floating chips)
+  .glass-nav    – navigation bar
+*/
+
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur)) saturate(150%);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(150%);
+  border: 1px solid var(--glass-border);
   border-radius: 1.5rem;
-  box-shadow: 0 0 40px rgba(82, 134, 172, 0.12);
+  box-shadow: var(--glass-shadow);
+  position: relative;
+  overflow: hidden;
 }
 
-.glass-panel-light {
-  background: rgba(16, 87, 133, 0.25);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(82, 134, 172, 0.25);
-  border-radius: 1.5rem;
+/* Inner top-edge light sheen */
+.glass::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(135deg,
+    rgba(90,174,232,0.07) 0%,
+    transparent 50%);
+  pointer-events: none;
 }
 
+.glass-soft {
+  background: rgba(0, 40, 70, 0.35);
+  backdrop-filter: blur(16px) saturate(130%);
+  -webkit-backdrop-filter: blur(16px) saturate(130%);
+  border: 1px solid rgba(90, 174, 232, 0.10);
+  border-radius: 9999px;
+}
+
+.glass-nav {
+  background: rgba(0, 20, 38, 0.60);
+  backdrop-filter: blur(32px) saturate(160%);
+  -webkit-backdrop-filter: blur(32px) saturate(160%);
+  border: 1px solid rgba(90, 174, 232, 0.10);
+  border-bottom: none;
+}
+
+/* ─── Gradient text ──────────────────────────────────────────── */
 .gradient-text {
-  background: linear-gradient(135deg, #E0EBFC 0%, #5286AC 100%);
+  background: linear-gradient(135deg, #ddeeff 0%, #5aaee8 55%, #4a8fc4 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-@keyframes float-slow {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  33% { transform: translate(30px, -20px) scale(1.05); }
-  66% { transform: translate(-20px, 30px) scale(0.97); }
+/* ─── Section label ──────────────────────────────────────────── */
+.section-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent-glow);
 }
-@keyframes float-medium {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  50% { transform: translate(-40px, 20px) scale(1.08); }
-}
-@keyframes float-fast {
-  0%, 100% { transform: translate(0, 0); }
-  50% { transform: translate(20px, -30px); }
+.section-label::before {
+  content: '';
+  display: block;
+  width: 28px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent-glow));
 }
 
-.orb-1 { animation: float-slow 18s ease-in-out infinite; }
-.orb-2 { animation: float-medium 14s ease-in-out infinite; }
-.orb-3 { animation: float-fast 10s ease-in-out infinite; }
+/* ─── Cursor-glow card effect ─────────────────────────────────── */
+/*
+  JS sets --mx / --my as percentages inside .glow-card via inline style.
+  The ::after pseudo-element renders the radial gradient.
+*/
+.glow-card {
+  --mx: 50%;
+  --my: 50%;
+  position: relative;
+  isolation: isolate;
+  transition:
+    border-color 0.35s ease,
+    box-shadow   0.35s ease,
+    transform    0.35s ease;
+}
 
+.glow-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    600px circle at var(--mx) var(--my),
+    rgba(90, 174, 232, 0.10),
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.glow-card:hover::after { opacity: 1; }
+
+.glow-card:hover {
+  border-color: rgba(90, 174, 232, 0.30) !important;
+  box-shadow: 0 0 0 1px rgba(90,174,232,0.08),
+              0 8px 60px rgba(0,40,80,0.6),
+              0 0 40px rgba(90,174,232,0.06);
+  transform: translateY(-3px);
+}
+
+/* ─── Magnetic / shimmer button ──────────────────────────────── */
+.btn-primary {
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #3a84be 0%, #5aaee8 100%);
+  color: #fff;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  border-radius: 9999px;
+  padding: 14px 32px;
+  border: none;
+  cursor: pointer;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+.btn-primary::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 60%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.18), transparent);
+  transform: skewX(-20deg);
+  transition: left 0.55s ease;
+}
+.btn-primary:hover::after { left: 140%; }
+.btn-primary:hover {
+  box-shadow: 0 0 40px rgba(90,174,232,0.45), 0 4px 20px rgba(0,40,80,0.5);
+  transform: translateY(-2px);
+}
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  color: var(--type-dim);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  border-radius: 9999px;
+  padding: 13px 30px;
+  border: 1px solid rgba(90,174,232,0.18);
+  cursor: pointer;
+  transition: border-color 0.3s ease, color 0.3s ease, background 0.3s ease;
+}
+.btn-ghost:hover {
+  border-color: rgba(90,174,232,0.45);
+  color: var(--type);
+  background: rgba(90,174,232,0.06);
+}
+
+/* ─── Infinite marquee ───────────────────────────────────────── */
 @keyframes marquee {
-  0% { transform: translateX(0); }
+  0%   { transform: translateX(0); }
   100% { transform: translateX(-50%); }
 }
 .marquee-track {
-  animation: marquee 30s linear infinite;
+  animation: marquee 32s linear infinite;
   display: flex;
   width: max-content;
 }
 .marquee-track:hover { animation-play-state: paused; }
 
-.transition-glass {
-  transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
-}
-
-.section-label {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: #5286AC;
-}
-.section-label::before {
-  content: '';
-  display: block;
-  width: 32px;
-  height: 1px;
-  background: #5286AC;
-}
+/* ─── Transition utility ─────────────────────────────────────── */
+.t-all { transition: all 0.3s ease; }

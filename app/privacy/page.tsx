@@ -6,104 +6,201 @@ export const metadata = {
   title: "Политика конфиденциальности | ИП Ямщикова",
 };
 
+const SECTION_STYLE: React.CSSProperties = {
+  background: "rgba(0,26,50,0.45)",
+  backdropFilter: "blur(28px)",
+  WebkitBackdropFilter: "blur(28px)",
+  border: "1px solid rgba(90,174,232,0.12)",
+  borderRadius: "1.5rem",
+  padding: "32px 36px",
+};
+
+const H2_STYLE: React.CSSProperties = {
+  fontSize: "18px", fontWeight: 700,
+  letterSpacing: "-0.01em", color: "#ddeeff",
+  marginBottom: "14px",
+};
+
+const P_STYLE: React.CSSProperties = {
+  fontSize: "15px", lineHeight: 1.75,
+  color: "rgba(221,238,255,0.58)",
+};
+
 export default function PrivacyPage() {
   return (
-    <div className="min-h-screen bg-[#003556]">
+    <div style={{ minHeight: "100vh", background: "#001e35" }}>
       {/* Header */}
-      <header className="border-b border-[#5286AC]/20 bg-[#003556]/80 backdrop-blur-xl sticky top-0 z-50">
-        <div className="max-w-4xl mx-auto px-6 py-5 flex items-center justify-between">
+      <header
+        style={{
+          position: "sticky", top: 0, zIndex: 50,
+          background: "rgba(0,20,38,0.80)",
+          backdropFilter: "blur(28px)",
+          borderBottom: "1px solid rgba(90,174,232,0.10)",
+        }}
+      >
+        <div
+          className="max-w-4xl mx-auto px-6 flex items-center justify-between"
+          style={{ height: "72px" }}
+        >
           <Link href="/" className="flex items-center gap-3">
-            <div className="w-9 h-9 relative">
+            <div style={{ width: 36, height: 36, position: "relative" }}>
               <Image src="/logo.svg" alt="Логотип" fill className="object-contain" />
             </div>
-            <span className="text-[#E0EBFC] font-[700] text-sm tracking-widest uppercase">ЯМЩИК</span>
+            <span
+              style={{
+                fontSize: "12px", fontWeight: 700,
+                letterSpacing: "0.20em", textTransform: "uppercase",
+                color: "rgba(221,238,255,0.80)",
+              }}
+            >
+              ЯМЩИК
+            </span>
           </Link>
-          <Link href="/" className="text-[#5286AC] hover:text-[#E0EBFC] text-sm font-[600] transition-colors">
+          <Link
+            href="/"
+            style={{
+              fontSize: "13px", fontWeight: 600,
+              color: "rgba(90,174,232,0.70)",
+              transition: "color 0.2s",
+            }}
+          >
             ← На главную
           </Link>
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto px-6 py-16">
-        <h1 className="font-[800] text-[#E0EBFC] text-4xl mb-2">Политика конфиденциальности</h1>
-        <p className="text-[#5286AC] text-sm mb-10">Последнее обновление: 1 января 2025 г.</p>
+      <main className="max-w-4xl mx-auto px-6" style={{ paddingTop: "64px", paddingBottom: "80px" }}>
+        <div
+          style={{
+            fontSize: "11px", fontWeight: 700,
+            letterSpacing: "0.20em", textTransform: "uppercase",
+            color: "rgba(90,174,232,0.60)", marginBottom: "14px",
+            display: "flex", alignItems: "center", gap: "10px",
+          }}
+        >
+          <span style={{ display: "block", width: 28, height: 1, background: "#5aaee8" }} />
+          Юридические документы
+        </div>
 
-        <div className="space-y-8 text-[#E0EBFC]/70 text-base leading-relaxed">
-          <section className="glass-panel p-8">
-            <h2 className="font-[700] text-[#E0EBFC] text-xl mb-4">1. Общие положения</h2>
-            <p>
+        <h1
+          style={{
+            fontSize: "clamp(30px, 4vw, 52px)",
+            fontWeight: 800, letterSpacing: "-0.03em", lineHeight: 1.05,
+            color: "#ddeeff", marginBottom: "8px",
+          }}
+        >
+          Политика конфиденциальности
+        </h1>
+        <p style={{ fontSize: "13px", color: "rgba(90,174,232,0.55)", marginBottom: "48px" }}>
+          Последнее обновление: 1 января 2025 г.
+        </p>
+
+        <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+          <div style={SECTION_STYLE}>
+            <h2 style={H2_STYLE}>1. Общие положения</h2>
+            <p style={P_STYLE}>
               Настоящая политика конфиденциальности регулирует порядок обработки и использования
-              персональных данных, которые {REQUISITES.name} (ИНН: {REQUISITES.inn}, ОГРНИП: {REQUISITES.ogrnip})
-              получает от пользователей при использовании данного сайта.
+              персональных данных, которые {REQUISITES.name} (ИНН: {REQUISITES.inn},
+              ОГРНИП: {REQUISITES.ogrnip}) получает от пользователей при использовании данного сайта.
             </p>
-          </section>
+          </div>
 
-          <section className="glass-panel p-8">
-            <h2 className="font-[700] text-[#E0EBFC] text-xl mb-4">2. Собираемые данные</h2>
-            <p className="mb-3">Мы собираем следующие персональные данные, предоставляемые вами добровольно:</p>
-            <ul className="space-y-2 list-none">
-              {["Имя и фамилия", "Номер телефона", "Адрес электронной почты", "Наименование компании", "Адрес объекта"].map((item) => (
-                <li key={item} className="flex items-center gap-3">
-                  <div className="w-1.5 h-1.5 rounded-full bg-[#5286AC] shrink-0" />
-                  {item}
+          <div style={SECTION_STYLE}>
+            <h2 style={H2_STYLE}>2. Собираемые данные</h2>
+            <p style={{ ...P_STYLE, marginBottom: "12px" }}>
+              Мы собираем следующие персональные данные, предоставляемые вами добровольно:
+            </p>
+            <ul style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+              {[
+                "Имя и фамилия",
+                "Номер телефона",
+                "Адрес электронной почты",
+                "Наименование компании",
+                "Адрес объекта",
+              ].map((item) => (
+                <li key={item} style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                  <div
+                    style={{
+                      width: 5, height: 5, borderRadius: "50%",
+                      background: "#5aaee8", flexShrink: 0,
+                    }}
+                  />
+                  <span style={P_STYLE}>{item}</span>
                 </li>
               ))}
             </ul>
-          </section>
+          </div>
 
-          <section className="glass-panel p-8">
-            <h2 className="font-[700] text-[#E0EBFC] text-xl mb-4">3. Цели обработки данных</h2>
-            <p>Собранные данные используются исключительно для:</p>
-            <ul className="mt-3 space-y-2">
+          <div style={SECTION_STYLE}>
+            <h2 style={H2_STYLE}>3. Цели обработки данных</h2>
+            <p style={{ ...P_STYLE, marginBottom: "12px" }}>
+              Собранные данные используются исключительно для:
+            </p>
+            <ul style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
               {[
                 "Подготовки коммерческого предложения по вашему запросу",
                 "Связи с вами для уточнения деталей заказа",
                 "Заключения и исполнения договора на оказание услуг",
                 "Направления информации об услугах (с вашего согласия)",
               ].map((item) => (
-                <li key={item} className="flex items-start gap-3">
-                  <div className="w-1.5 h-1.5 rounded-full bg-[#5286AC] shrink-0 mt-2" />
-                  {item}
+                <li key={item} style={{ display: "flex", alignItems: "flex-start", gap: "10px" }}>
+                  <div
+                    style={{
+                      width: 5, height: 5, borderRadius: "50%",
+                      background: "#5aaee8", flexShrink: 0, marginTop: "8px",
+                    }}
+                  />
+                  <span style={P_STYLE}>{item}</span>
                 </li>
               ))}
             </ul>
-          </section>
+          </div>
 
-          <section className="glass-panel p-8">
-            <h2 className="font-[700] text-[#E0EBFC] text-xl mb-4">4. Защита данных</h2>
-            <p>
+          <div style={SECTION_STYLE}>
+            <h2 style={H2_STYLE}>4. Защита данных</h2>
+            <p style={P_STYLE}>
               Мы принимаем необходимые технические и организационные меры для защиты ваших данных
-              от несанкционированного доступа, изменения, раскрытия или уничтожения.
-              Данные не передаются третьим лицам без вашего согласия, за исключением случаев,
-              предусмотренных законодательством Российской Федерации.
+              от несанкционированного доступа, изменения, раскрытия или уничтожения. Данные не
+              передаются третьим лицам без вашего согласия, за исключением случаев, предусмотренных
+              законодательством Российской Федерации.
             </p>
-          </section>
+          </div>
 
-          <section className="glass-panel p-8">
-            <h2 className="font-[700] text-[#E0EBFC] text-xl mb-4">5. Ваши права</h2>
-            <p>Вы вправе в любое время:</p>
-            <ul className="mt-3 space-y-2">
+          <div style={SECTION_STYLE}>
+            <h2 style={H2_STYLE}>5. Ваши права</h2>
+            <p style={{ ...P_STYLE, marginBottom: "12px" }}>Вы вправе в любое время:</p>
+            <ul style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
               {[
                 "Запросить информацию об обрабатываемых нами ваших данных",
                 "Потребовать исправления неточных данных",
                 "Отозвать согласие на обработку персональных данных",
                 "Потребовать удаления ваших данных",
               ].map((item) => (
-                <li key={item} className="flex items-start gap-3">
-                  <div className="w-1.5 h-1.5 rounded-full bg-[#5286AC] shrink-0 mt-2" />
-                  {item}
+                <li key={item} style={{ display: "flex", alignItems: "flex-start", gap: "10px" }}>
+                  <div
+                    style={{
+                      width: 5, height: 5, borderRadius: "50%",
+                      background: "#5aaee8", flexShrink: 0, marginTop: "8px",
+                    }}
+                  />
+                  <span style={P_STYLE}>{item}</span>
                 </li>
               ))}
             </ul>
-          </section>
+          </div>
 
-          <section className="glass-panel p-8">
-            <h2 className="font-[700] text-[#E0EBFC] text-xl mb-4">6. Контакты</h2>
-            <p>
-              По вопросам, связанным с обработкой персональных данных, обращайтесь по адресу:{" "}
-              <a href="mailto:ip-yamsh@mail.ru" className="text-[#5286AC] hover:underline">ip-yamsh@mail.ru</a>
+          <div style={SECTION_STYLE}>
+            <h2 style={H2_STYLE}>6. Контакты</h2>
+            <p style={P_STYLE}>
+              По вопросам, связанным с обработкой персональных данных, обращайтесь:{" "}
+              <a
+                href="mailto:ip-yamsh@mail.ru"
+                style={{ color: "rgba(90,174,232,0.75)", textDecoration: "underline" }}
+              >
+                ip-yamsh@mail.ru
+              </a>
             </p>
-          </section>
+          </div>
         </div>
       </main>
     </div>

@@ -3,55 +3,100 @@ import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { PROCESS_STEPS } from "@/lib/constants";
 
 export default function Process() {
-  const ref = useScrollReveal<HTMLDivElement>(".reveal-item", { stagger: 0.1 });
+  const ref = useScrollReveal<HTMLDivElement>(".reveal-item", { stagger: 0.09 });
 
   return (
-    <section className="relative py-24 lg:py-32 overflow-hidden">
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[400px] h-[400px] rounded-full bg-[#105785]/15 blur-[120px]" />
-      </div>
+    <section
+      className="relative overflow-hidden"
+      style={{ paddingTop: "120px", paddingBottom: "120px" }}
+    >
+      <div
+        className="absolute pointer-events-none"
+        aria-hidden
+        style={{
+          left: "-5%", top: "40%",
+          width: "450px", height: "450px", borderRadius: "50%",
+          background: "radial-gradient(circle, rgba(16,87,133,0.22) 0%, transparent 70%)",
+          filter: "blur(80px)",
+        }}
+      />
 
-      <div ref={ref} className="max-w-7xl mx-auto px-6 lg:px-8">
+      <div ref={ref} className="max-w-7xl mx-auto px-6 lg:px-10 xl:px-12">
         <div className="reveal-item section-label mb-6">Как проходит работа</div>
-        <div className="reveal-item mb-16">
+
+        <div className="reveal-item mb-14">
           <h2
-            className="font-[700] text-[#E0EBFC] leading-[1.1] tracking-[-0.02em] max-w-2xl"
-            style={{ fontSize: "clamp(30px, 3.5vw, 52px)" }}
+            style={{
+              fontSize: "clamp(28px, 3.2vw, 50px)",
+              fontWeight: 700, letterSpacing: "-0.025em", lineHeight: 1.1,
+              color: "#ddeeff", maxWidth: "640px",
+            }}
           >
             От заявки до{" "}
             <span className="gradient-text">подписанного акта</span> — 6 этапов
           </h2>
         </div>
 
-        <div className="relative">
-          {/* Connector line */}
-          <div className="hidden lg:block absolute top-12 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#5286AC]/30 to-transparent pointer-events-none" />
+        {/* Timeline grid */}
+        <div className="relative grid sm:grid-cols-2 lg:grid-cols-6 gap-4">
+          {/* Connector line — desktop only */}
+          <div
+            className="hidden lg:block absolute pointer-events-none"
+            style={{
+              top: "44px", left: "calc(1/12 * 100% + 20px)",
+              right: "calc(1/12 * 100% + 20px)",
+              height: "1px",
+              background: "linear-gradient(90deg, transparent, rgba(90,174,232,0.20) 20%, rgba(90,174,232,0.20) 80%, transparent)",
+            }}
+          />
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-6 gap-5">
-            {PROCESS_STEPS.map(({ number, title, description }) => (
+          {PROCESS_STEPS.map(({ number, title, description }) => (
+            <div
+              key={number}
+              className="reveal-item glass glow-card flex flex-col gap-4 cursor-default"
+              style={{ padding: "24px 22px 28px" }}
+            >
+              {/* Step badge */}
               <div
-                key={number}
-                className="reveal-item glass-panel p-6 flex flex-col gap-4 transition-glass hover:border-[#5286AC]/40 hover:-translate-y-1 cursor-default relative"
+                className="flex items-center justify-center rounded-full shrink-0"
+                style={{
+                  width: 40, height: 40,
+                  border: "1.5px solid rgba(90,174,232,0.30)",
+                  background: "rgba(74,143,196,0.10)",
+                }}
               >
-                {/* Step number */}
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full border-2 border-[#5286AC]/40 flex items-center justify-center shrink-0 bg-[#5286AC]/10">
-                    <span className="text-[#5286AC] font-[800] text-sm">{number}</span>
-                  </div>
-                </div>
-                <div>
-                  <h3 className="font-[600] text-[#E0EBFC] text-base mb-2 leading-tight">{title}</h3>
-                  <p className="text-[#E0EBFC]/55 text-sm leading-relaxed">{description}</p>
-                </div>
+                <span
+                  style={{
+                    fontSize: "12px", fontWeight: 800,
+                    color: "#5aaee8",
+                  }}
+                >
+                  {number}
+                </span>
               </div>
-            ))}
-          </div>
+
+              <div>
+                <h3
+                  style={{
+                    fontSize: "14px", fontWeight: 700,
+                    letterSpacing: "-0.01em", color: "#ddeeff",
+                    marginBottom: "8px", lineHeight: 1.3,
+                  }}
+                >
+                  {title}
+                </h3>
+                <p style={{ fontSize: "12.5px", lineHeight: 1.68, color: "rgba(221,238,255,0.48)" }}>
+                  {description}
+                </p>
+              </div>
+            </div>
+          ))}
         </div>
 
         <div className="reveal-item mt-12 text-center">
           <button
             onClick={() => document.querySelector("#contact")?.scrollIntoView({ behavior: "smooth" })}
-            className="inline-flex items-center gap-2 bg-[#5286AC] hover:bg-[#5286AC]/90 text-[#E0EBFC] font-[700] px-8 py-4 rounded-full transition-all duration-300 hover:shadow-[0_0_24px_rgba(82,134,172,0.4)] hover:-translate-y-0.5"
+            className="btn-primary text-sm"
           >
             Начать с осмотра объекта
           </button>

@@ -1,8 +1,8 @@
 "use client";
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { FORMSPREE_URL, CONTACTS } from "@/lib/constants";
-import { Phone, Mail, Send, CheckCircle, AlertCircle, MessageCircle } from "lucide-react";
+import { Phone, Mail, MessageCircle, Send, CheckCircle, AlertCircle } from "lucide-react";
 
 interface FormData {
   name: string;
@@ -15,15 +15,60 @@ interface FormData {
 
 type Status = "idle" | "loading" | "success" | "error";
 
+const inputBase: React.CSSProperties = {
+  width: "100%",
+  background: "rgba(0,26,50,0.55)",
+  border: "1px solid rgba(90,174,232,0.14)",
+  borderRadius: "12px",
+  padding: "14px 18px",
+  fontSize: "14px",
+  fontWeight: 400,
+  color: "#ddeeff",
+  outline: "none",
+  transition: "border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease",
+  fontFamily: "inherit",
+};
+
+function Field({
+  label, children,
+}: { label: string; children: React.ReactNode }) {
+  return (
+    <div className="flex flex-col gap-2">
+      <label
+        style={{
+          fontSize: "10px", fontWeight: 700,
+          letterSpacing: "0.18em", textTransform: "uppercase",
+          color: "rgba(90,174,232,0.55)",
+        }}
+      >
+        {label}
+      </label>
+      {children}
+    </div>
+  );
+}
+
 export default function ContactForm() {
   const [form, setForm] = useState<FormData>({
-    name: "", phone: "", company: "", address: "", area: "", message: "",
+    name: "", phone: "", company: "",
+    address: "", area: "", message: "",
   });
   const [status, setStatus] = useState<Status>("idle");
-  const ref = useScrollReveal<HTMLDivElement>(".reveal-item", { stagger: 0.1 });
+  const ref = useScrollReveal<HTMLDivElement>(".reveal-item", { stagger: 0.09 });
 
-  const set = (field: keyof FormData) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setForm((prev) => ({ ...prev, [field]: e.target.value }));
+  const set = (field: keyof FormData) =>
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+      setForm((p) => ({ ...p, [field]: e.target.value }));
+
+  const focusStyle = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    e.currentTarget.style.borderColor = "rgba(90,174,232,0.40)";
+    e.currentTarget.style.boxShadow = "0 0 0 3px rgba(90,174,232,0.08)";
+    e.currentTarget.style.background = "rgba(0,30,56,0.70)";
+  };
+  const blurStyle = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    e.currentTarget.style.borderColor = "rgba(90,174,232,0.14)";
+    e.currentTarget.style.boxShadow = "none";
+    e.currentTarget.style.background = "rgba(0,26,50,0.55)";
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -35,171 +80,369 @@ export default function ContactForm() {
         headers: { "Content-Type": "application/json", Accept: "application/json" },
         body: JSON.stringify(form),
       });
-      if (res.ok) {
-        setStatus("success");
-        setForm({ name: "", phone: "", company: "", address: "", area: "", message: "" });
-      } else {
-        setStatus("error");
-      }
+      setStatus(res.ok ? "success" : "error");
+      if (res.ok) setForm({ name: "", phone: "", company: "", address: "", area: "", message: "" });
     } catch {
       setStatus("error");
     }
     setTimeout(() => setStatus("idle"), 5000);
   };
 
-  const inputClass =
-    "w-full bg-[#003556]/60 border border-[#5286AC]/20 focus:border-[#5286AC]/60 rounded-xl px-5 py-4 text-[#E0EBFC] placeholder-[#E0EBFC]/30 text-base font-[400] outline-none transition-all duration-200 focus:bg-[#003556]/80 focus:shadow-[0_0_0_2px_rgba(82,134,172,0.15)]";
-
   return (
-    <section id="contact" className="relative py-24 lg:py-32 overflow-hidden">
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute bottom-0 right-0 w-[500px] h-[500px] rounded-full bg-[#5286AC]/12 blur-[140px]" />
-        <div className="absolute top-0 left-0 w-[400px] h-[400px] rounded-full bg-[#105785]/20 blur-[120px]" />
-      </div>
+    <section
+      id="contact"
+      className="relative overflow-hidden"
+      style={{ paddingTop: "120px", paddingBottom: "120px" }}
+    >
+      {/* Glows */}
+      <div
+        className="absolute pointer-events-none"
+        aria-hidden
+        style={{
+          bottom: "-5%", right: "-5%",
+          width: "550px", height: "550px", borderRadius: "50%",
+          background: "radial-gradient(circle, rgba(74,143,196,0.18) 0%, transparent 70%)",
+          filter: "blur(100px)",
+        }}
+      />
+      <div
+        className="absolute pointer-events-none"
+        aria-hidden
+        style={{
+          top: "-5%", left: "-5%",
+          width: "450px", height: "450px", borderRadius: "50%",
+          background: "radial-gradient(circle, rgba(16,87,133,0.22) 0%, transparent 70%)",
+          filter: "blur(90px)",
+        }}
+      />
 
-      <div ref={ref} className="max-w-7xl mx-auto px-6 lg:px-8">
+      <div ref={ref} className="max-w-7xl mx-auto px-6 lg:px-10 xl:px-12">
         <div className="reveal-item section-label mb-6">Контакты</div>
+
         <div className="reveal-item mb-14">
           <h2
-            className="font-[700] text-[#E0EBFC] leading-[1.1] tracking-[-0.02em] max-w-2xl"
-            style={{ fontSize: "clamp(30px, 3.5vw, 52px)" }}
+            style={{
+              fontSize: "clamp(28px, 3.2vw, 50px)",
+              fontWeight: 700, letterSpacing: "-0.025em", lineHeight: 1.1,
+              color: "#ddeeff", maxWidth: "600px",
+            }}
           >
             Получите расчет{" "}
             <span className="gradient-text">за 30 минут</span>
           </h2>
-          <p className="text-[#E0EBFC]/60 text-lg mt-4">
-            Оставьте заявку — мы перезвоним, зафиксируем параметры объекта и подготовим смету.
+          <p
+            style={{
+              fontSize: "16px", lineHeight: 1.75,
+              color: "rgba(221,238,255,0.50)",
+              marginTop: "14px",
+            }}
+          >
+            Оставьте заявку — мы перезвоним, зафиксируем параметры объекта
+            и подготовим детализированную смету.
           </p>
         </div>
 
         <div className="reveal-item grid lg:grid-cols-2 gap-10 lg:gap-16 items-start">
-          {/* Form */}
-          <form onSubmit={handleSubmit} className="glass-panel p-8 lg:p-10 space-y-4">
+
+          {/* ── Form ── */}
+          <form
+            onSubmit={handleSubmit}
+            className="glass flex flex-col gap-4"
+            style={{ padding: "36px 36px 40px" }}
+          >
             <div className="grid sm:grid-cols-2 gap-4">
-              <div>
-                <label className="text-[#E0EBFC]/50 text-xs font-[600] uppercase tracking-wide mb-2 block">Ваше имя *</label>
-                <input required value={form.name} onChange={set("name")} placeholder="Иван Иванов" className={inputClass} />
-              </div>
-              <div>
-                <label className="text-[#E0EBFC]/50 text-xs font-[600] uppercase tracking-wide mb-2 block">Телефон *</label>
-                <input required value={form.phone} onChange={set("phone")} placeholder="+7 (___) ___-__-__" type="tel" className={inputClass} />
-              </div>
+              <Field label="Ваше имя *">
+                <input
+                  required
+                  value={form.name}
+                  onChange={set("name")}
+                  placeholder="Иван Иванов"
+                  style={inputBase}
+                  onFocus={focusStyle}
+                  onBlur={blurStyle}
+                />
+              </Field>
+              <Field label="Телефон *">
+                <input
+                  required
+                  type="tel"
+                  value={form.phone}
+                  onChange={set("phone")}
+                  placeholder="+7 (___) ___-__-__"
+                  style={inputBase}
+                  onFocus={focusStyle}
+                  onBlur={blurStyle}
+                />
+              </Field>
             </div>
-            <div>
-              <label className="text-[#E0EBFC]/50 text-xs font-[600] uppercase tracking-wide mb-2 block">Компания *</label>
-              <input required value={form.company} onChange={set("company")} placeholder="ООО «Название компании»" className={inputClass} />
-            </div>
-            <div>
-              <label className="text-[#E0EBFC]/50 text-xs font-[600] uppercase tracking-wide mb-2 block">Адрес объекта</label>
-              <input value={form.address} onChange={set("address")} placeholder="Москва, ул. Примерная, 1" className={inputClass} />
-            </div>
-            <div>
-              <label className="text-[#E0EBFC]/50 text-xs font-[600] uppercase tracking-wide mb-2 block">Площадь остекления (примерно)</label>
-              <input value={form.area} onChange={set("area")} placeholder="Например: 3 000 м²" className={inputClass} />
-            </div>
-            <div>
-              <label className="text-[#E0EBFC]/50 text-xs font-[600] uppercase tracking-wide mb-2 block">Комментарий</label>
-              <textarea value={form.message} onChange={set("message")} placeholder="Опишите задачу: тип загрязнения, особенности объекта, предпочтительные сроки..." rows={4} className={`${inputClass} resize-none`} />
-            </div>
+
+            <Field label="Компания *">
+              <input
+                required
+                value={form.company}
+                onChange={set("company")}
+                placeholder="ООО «Название компании»"
+                style={inputBase}
+                onFocus={focusStyle}
+                onBlur={blurStyle}
+              />
+            </Field>
+
+            <Field label="Адрес объекта">
+              <input
+                value={form.address}
+                onChange={set("address")}
+                placeholder="Москва, ул. Примерная, 1"
+                style={inputBase}
+                onFocus={focusStyle}
+                onBlur={blurStyle}
+              />
+            </Field>
+
+            <Field label="Площадь остекления (примерно)">
+              <input
+                value={form.area}
+                onChange={set("area")}
+                placeholder="Например: 3 000 м²"
+                style={inputBase}
+                onFocus={focusStyle}
+                onBlur={blurStyle}
+              />
+            </Field>
+
+            <Field label="Комментарий">
+              <textarea
+                value={form.message}
+                onChange={set("message")}
+                placeholder="Опишите задачу: тип загрязнения, особенности объекта, предпочтительные сроки..."
+                rows={4}
+                style={{ ...inputBase, resize: "none" }}
+                onFocus={focusStyle}
+                onBlur={blurStyle}
+              />
+            </Field>
 
             <button
               type="submit"
               disabled={status === "loading"}
-              className="w-full flex items-center justify-center gap-3 bg-[#5286AC] hover:bg-[#5286AC]/90 disabled:opacity-60 disabled:cursor-not-allowed text-[#E0EBFC] font-[700] text-base tracking-wide py-5 rounded-xl transition-all duration-300 hover:shadow-[0_0_32px_rgba(82,134,172,0.4)] hover:-translate-y-0.5"
+              className="btn-primary w-full justify-center"
+              style={{ marginTop: "4px", opacity: status === "loading" ? 0.65 : 1 }}
             >
               {status === "loading" ? (
                 <>
-                  <div className="w-5 h-5 border-2 border-[#E0EBFC]/40 border-t-[#E0EBFC] rounded-full animate-spin" />
-                  Отправляем заявку...
+                  <div
+                    className="rounded-full border-2"
+                    style={{
+                      width: 18, height: 18,
+                      borderColor: "rgba(255,255,255,0.35)",
+                      borderTopColor: "#fff",
+                      animation: "spin 0.7s linear infinite",
+                    }}
+                  />
+                  Отправляем...
                 </>
               ) : (
                 <>
-                  <Send size={18} />
+                  <Send size={16} />
                   Получить расчет за 30 минут
                 </>
               )}
             </button>
 
-            <p className="text-[#E0EBFC]/30 text-xs text-center">
+            <p
+              style={{
+                fontSize: "11px", textAlign: "center",
+                color: "rgba(221,238,255,0.28)",
+                lineHeight: 1.6,
+              }}
+            >
               Нажимая кнопку, вы соглашаетесь с{" "}
-              <a href="/privacy" className="text-[#5286AC] hover:underline">Политикой обработки персональных данных</a>.
+              <a
+                href="/privacy"
+                style={{ color: "rgba(90,174,232,0.65)" }}
+                className="hover:underline"
+              >
+                Политикой обработки персональных данных
+              </a>.
             </p>
 
-            {/* Status messages */}
+            {/* Status toasts */}
             {status === "success" && (
-              <div className="flex items-center gap-3 glass-panel p-4 border-[#5286AC]/40 bg-[#5286AC]/10">
-                <CheckCircle size={20} className="text-[#5286AC] shrink-0" />
-                <p className="text-[#E0EBFC]/80 text-sm">Заявка отправлена! Мы свяжемся с вами в течение 30 минут.</p>
+              <div
+                className="glass flex items-center gap-3"
+                style={{
+                  padding: "14px 18px", borderRadius: "12px",
+                  borderColor: "rgba(90,174,232,0.35)",
+                  background: "rgba(74,143,196,0.10)",
+                }}
+              >
+                <CheckCircle size={18} style={{ color: "#5aaee8", flexShrink: 0 }} />
+                <p style={{ fontSize: "13px", color: "rgba(221,238,255,0.80)" }}>
+                  Заявка отправлена! Мы свяжемся с вами в течение 30 минут.
+                </p>
               </div>
             )}
             {status === "error" && (
-              <div className="flex items-center gap-3 glass-panel p-4 border-red-500/30 bg-red-500/10">
-                <AlertCircle size={20} className="text-red-400 shrink-0" />
-                <p className="text-[#E0EBFC]/80 text-sm">Произошла ошибка. Пожалуйста, позвоните нам напрямую.</p>
+              <div
+                className="glass flex items-center gap-3"
+                style={{
+                  padding: "14px 18px", borderRadius: "12px",
+                  borderColor: "rgba(220,60,60,0.30)",
+                  background: "rgba(220,60,60,0.08)",
+                }}
+              >
+                <AlertCircle size={18} style={{ color: "#f87171", flexShrink: 0 }} />
+                <p style={{ fontSize: "13px", color: "rgba(221,238,255,0.80)" }}>
+                  Ошибка отправки. Пожалуйста, позвоните нам напрямую.
+                </p>
               </div>
             )}
           </form>
 
-          {/* Contacts */}
-          <div className="space-y-6">
-            {[CONTACTS.director, CONTACTS.specialist].map((person) => (
-              <div key={person.name} className="glass-panel p-7">
-                <div className="text-[#5286AC] text-xs font-[600] uppercase tracking-widest mb-1">{person.title}</div>
-                <div className="text-[#E0EBFC] font-[700] text-xl mb-3">{person.name}</div>
-                <a
-                  href={person.phoneHref}
-                  className="flex items-center gap-3 text-[#E0EBFC]/80 hover:text-[#E0EBFC] transition-colors text-lg font-[600]"
-                >
-                  <Phone size={18} className="text-[#5286AC]" />
-                  {person.phone}
-                </a>
-              </div>
-            ))}
+          {/* ── Contacts ── */}
+          <div className="space-y-4">
 
-            <div className="glass-panel p-7 space-y-4">
-              <a
-                href={`mailto:${CONTACTS.email}`}
-                className="flex items-center gap-3 text-[#E0EBFC]/70 hover:text-[#E0EBFC] transition-colors"
+            {/* Михаил Анатольевич */}
+            <div className="glass" style={{ padding: "24px 26px" }}>
+              <div
+                style={{
+                  fontSize: "10px", fontWeight: 700,
+                  letterSpacing: "0.18em", textTransform: "uppercase",
+                  color: "rgba(90,174,232,0.55)", marginBottom: "4px",
+                }}
               >
-                <div className="w-10 h-10 rounded-xl bg-[#5286AC]/15 border border-[#5286AC]/20 flex items-center justify-center shrink-0">
-                  <Mail size={16} className="text-[#5286AC]" />
-                </div>
-                <span className="font-[500]">{CONTACTS.email}</span>
-              </a>
-              <a
-                href={CONTACTS.telegram}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-3 text-[#E0EBFC]/70 hover:text-[#E0EBFC] transition-colors"
+                {CONTACTS.director.title}
+              </div>
+              <div
+                style={{
+                  fontSize: "18px", fontWeight: 700,
+                  color: "#ddeeff", marginBottom: "12px",
+                  letterSpacing: "-0.01em",
+                }}
               >
-                <div className="w-10 h-10 rounded-xl bg-[#5286AC]/15 border border-[#5286AC]/20 flex items-center justify-center shrink-0">
-                  <MessageCircle size={16} className="text-[#5286AC]" />
-                </div>
-                <span className="font-[500]">Telegram</span>
+                {CONTACTS.director.name}
+              </div>
+              <a
+                href={CONTACTS.director.phoneHref}
+                className="flex items-center gap-3 t-all"
+                style={{ fontSize: "17px", fontWeight: 600, color: "rgba(221,238,255,0.75)" }}
+                onMouseEnter={(e) => (e.currentTarget.style.color = "#ddeeff")}
+                onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(221,238,255,0.75)")}
+              >
+                <Phone size={16} style={{ color: "#5aaee8" }} />
+                {CONTACTS.director.phone}
               </a>
             </div>
 
-            {/* Working hours */}
-            <div className="glass-panel p-7">
-              <div className="text-[#5286AC] text-xs font-[600] uppercase tracking-widest mb-3">Режим работы</div>
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span className="text-[#E0EBFC]/60">Звонки и заявки</span>
-                  <span className="text-[#E0EBFC] font-[500]">Пн–Вс, 08:00–22:00</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-[#E0EBFC]/60">Выполнение работ</span>
-                  <span className="text-[#E0EBFC] font-[500]">Круглосуточно</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-[#E0EBFC]/60">Расчет стоимости</span>
-                  <span className="text-[#E0EBFC] font-[500]">30 минут</span>
-                </div>
+            {/* Даниил Михайлович */}
+            <div className="glass" style={{ padding: "24px 26px" }}>
+              <div
+                style={{
+                  fontSize: "10px", fontWeight: 700,
+                  letterSpacing: "0.18em", textTransform: "uppercase",
+                  color: "rgba(90,174,232,0.55)", marginBottom: "4px",
+                }}
+              >
+                {CONTACTS.specialist.title}
+              </div>
+              <div
+                style={{
+                  fontSize: "18px", fontWeight: 700,
+                  color: "#ddeeff", marginBottom: "12px",
+                  letterSpacing: "-0.01em",
+                }}
+              >
+                {CONTACTS.specialist.name}
+              </div>
+              <a
+                href={CONTACTS.specialist.phoneHref}
+                className="flex items-center gap-3 t-all"
+                style={{ fontSize: "17px", fontWeight: 600, color: "rgba(221,238,255,0.75)" }}
+                onMouseEnter={(e) => (e.currentTarget.style.color = "#ddeeff")}
+                onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(221,238,255,0.75)")}
+              >
+                <Phone size={16} style={{ color: "#5aaee8" }} />
+                {CONTACTS.specialist.phone}
+              </a>
+            </div>
+
+            {/* Email + Telegram */}
+            <div className="glass" style={{ padding: "22px 26px" }}>
+              <div className="flex flex-col gap-4">
+                <a
+                  href={`mailto:${CONTACTS.email}`}
+                  className="flex items-center gap-3 t-all"
+                  style={{ color: "rgba(221,238,255,0.60)" }}
+                  onMouseEnter={(e) => (e.currentTarget.style.color = "#ddeeff")}
+                  onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(221,238,255,0.60)")}
+                >
+                  <div
+                    className="flex items-center justify-center rounded-xl shrink-0"
+                    style={{
+                      width: 38, height: 38,
+                      background: "rgba(74,143,196,0.12)",
+                      border: "1px solid rgba(90,174,232,0.18)",
+                    }}
+                  >
+                    <Mail size={15} style={{ color: "#5aaee8" }} />
+                  </div>
+                  <span style={{ fontSize: "14px", fontWeight: 500 }}>{CONTACTS.email}</span>
+                </a>
+                <a
+                  href={CONTACTS.telegram}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 t-all"
+                  style={{ color: "rgba(221,238,255,0.60)" }}
+                  onMouseEnter={(e) => (e.currentTarget.style.color = "#ddeeff")}
+                  onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(221,238,255,0.60)")}
+                >
+                  <div
+                    className="flex items-center justify-center rounded-xl shrink-0"
+                    style={{
+                      width: 38, height: 38,
+                      background: "rgba(74,143,196,0.12)",
+                      border: "1px solid rgba(90,174,232,0.18)",
+                    }}
+                  >
+                    <MessageCircle size={15} style={{ color: "#5aaee8" }} />
+                  </div>
+                  <span style={{ fontSize: "14px", fontWeight: 500 }}>Telegram</span>
+                </a>
+              </div>
+            </div>
+
+            {/* Режим работы */}
+            <div className="glass" style={{ padding: "22px 26px" }}>
+              <div
+                style={{
+                  fontSize: "10px", fontWeight: 700,
+                  letterSpacing: "0.18em", textTransform: "uppercase",
+                  color: "rgba(90,174,232,0.55)", marginBottom: "14px",
+                }}
+              >
+                Режим работы
+              </div>
+              <div className="flex flex-col gap-3">
+                {[
+                  { key: "Звонки и заявки",   val: "Пн–Вс, 08:00–22:00" },
+                  { key: "Выполнение работ",  val: "Круглосуточно"       },
+                  { key: "Расчет стоимости",  val: "30 минут"            },
+                ].map(({ key, val }) => (
+                  <div key={key} className="flex justify-between items-center">
+                    <span style={{ fontSize: "13px", color: "rgba(221,238,255,0.45)" }}>{key}</span>
+                    <span style={{ fontSize: "13px", fontWeight: 600, color: "rgba(221,238,255,0.80)" }}>{val}</span>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
         </div>
       </div>
+
+      <style>{`
+        @keyframes spin { to { transform: rotate(360deg); } }
+      `}</style>
     </section>
   );
 }

@@ -6,50 +6,87 @@ import { FAQ_ITEMS } from "@/lib/constants";
 
 export default function FAQ() {
   const [open, setOpen] = useState<number | null>(null);
-  const ref = useScrollReveal<HTMLDivElement>(".reveal-item", { stagger: 0.08 });
+  const ref = useScrollReveal<HTMLDivElement>(".reveal-item", { stagger: 0.07 });
 
   return (
-    <section className="relative py-20 overflow-hidden">
-      <div ref={ref} className="max-w-4xl mx-auto px-6 lg:px-8">
+    <section
+      className="relative overflow-hidden"
+      style={{ paddingTop: "100px", paddingBottom: "100px" }}
+    >
+      <div ref={ref} className="max-w-3xl mx-auto px-6 lg:px-10 xl:px-12">
         <div className="reveal-item section-label mb-6">Частые вопросы</div>
+
         <div className="reveal-item mb-12">
           <h2
-            className="font-[700] text-[#E0EBFC] leading-[1.1] tracking-[-0.02em]"
-            style={{ fontSize: "clamp(28px, 3vw, 48px)" }}
+            style={{
+              fontSize: "clamp(26px, 3vw, 46px)",
+              fontWeight: 700, letterSpacing: "-0.025em", lineHeight: 1.1,
+              color: "#ddeeff",
+            }}
           >
             Вопросы, которые задают{" "}
             <span className="gradient-text">до подписания договора</span>
           </h2>
         </div>
 
-        <div className="space-y-3">
+        <div className="space-y-2">
           {FAQ_ITEMS.map((item, i) => (
             <div
               key={i}
-              className="reveal-item glass-panel overflow-hidden transition-glass"
+              className="reveal-item glass overflow-hidden t-all"
+              style={{
+                borderColor: open === i
+                  ? "rgba(90,174,232,0.28)"
+                  : "rgba(90,174,232,0.12)",
+              }}
             >
               <button
                 onClick={() => setOpen(open === i ? null : i)}
-                className="w-full flex items-start gap-4 p-6 lg:p-7 text-left"
+                className="w-full flex items-start gap-4 text-left"
+                style={{ padding: "20px 24px" }}
               >
-                <span className="text-[#5286AC] font-[800] text-sm shrink-0 mt-0.5">
+                <span
+                  style={{
+                    fontSize: "11px", fontWeight: 800,
+                    color: "#5aaee8", flexShrink: 0, marginTop: "2px",
+                    letterSpacing: "0.06em",
+                  }}
+                >
                   {String(i + 1).padStart(2, "0")}
                 </span>
-                <span className="flex-1 font-[600] text-[#E0EBFC] text-base lg:text-lg leading-tight">
+                <span
+                  className="flex-1"
+                  style={{
+                    fontSize: "15px", fontWeight: 600,
+                    letterSpacing: "-0.01em", lineHeight: 1.4,
+                    color: "#ddeeff",
+                  }}
+                >
                   {item.question}
                 </span>
-                <span className="shrink-0 text-[#5286AC] ml-4 mt-0.5">
-                  {open === i ? <Minus size={18} /> : <Plus size={18} />}
+                <span
+                  className="shrink-0 t-all"
+                  style={{
+                    color: open === i ? "#5aaee8" : "rgba(90,174,232,0.45)",
+                    marginTop: "2px",
+                  }}
+                >
+                  {open === i ? <Minus size={16} /> : <Plus size={16} />}
                 </span>
               </button>
 
               <div
-                className={`overflow-hidden transition-all duration-300 ease-in-out ${
-                  open === i ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
-                }`}
+                style={{
+                  maxHeight: open === i ? "400px" : "0",
+                  opacity: open === i ? 1 : 0,
+                  overflow: "hidden",
+                  transition: "max-height 0.35s ease, opacity 0.25s ease",
+                }}
               >
-                <div className="px-6 lg:px-7 pb-6 lg:pb-7 pl-12 lg:pl-14">
-                  <p className="text-[#E0EBFC]/65 text-base leading-relaxed">{item.answer}</p>
+                <div style={{ padding: "0 24px 22px 52px" }}>
+                  <p style={{ fontSize: "14px", lineHeight: 1.75, color: "rgba(221,238,255,0.55)" }}>
+                    {item.answer}
+                  </p>
                 </div>
               </div>
             </div>
@@ -57,10 +94,12 @@ export default function FAQ() {
         </div>
 
         <div className="reveal-item mt-10 text-center">
-          <p className="text-[#E0EBFC]/50 mb-4">Не нашли ответ на свой вопрос?</p>
+          <p style={{ fontSize: "14px", color: "rgba(221,238,255,0.38)", marginBottom: "14px" }}>
+            Не нашли ответ на свой вопрос?
+          </p>
           <button
             onClick={() => document.querySelector("#contact")?.scrollIntoView({ behavior: "smooth" })}
-            className="text-[#5286AC] hover:text-[#E0EBFC] font-[600] text-sm border border-[#5286AC]/40 hover:border-[#5286AC] rounded-full px-6 py-3 transition-all duration-300"
+            className="btn-ghost text-sm"
           >
             Задать вопрос напрямую →
           </button>
