@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls /Users/doraderkacheva/Desktop/мофик && cat /Users/doraderkacheva/Desktop/лого9.svg | head -5)",
+      "Bash(cp /Users/doraderkacheva/Desktop/лого9.svg /Users/doraderkacheva/Desktop/мофик/logo.svg)",
+      "Bash(npx create-next-app@latest . --typescript --tailwind --app --no-src-dir --no-eslint --import-alias \"@/*\" --yes)",
+      "Bash(npx create-next-app@latest . --typescript --tailwind --app --no-src-dir --no-eslint --import-alias \"@/*\" --yes --skip-git)",
+      "Read(//private/tmp/**)",
+      "Bash(npx create-next-app@latest glassclean --typescript --tailwind --app --no-src-dir --no-eslint --import-alias \"@/*\" --yes)",
+      "Bash(npm install *)",
+      "Bash(npm run *)",
+      "Bash(curl -s http://localhost:3000)",
+      "Bash(kill %1)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)"
+    ]
+  }
+}
