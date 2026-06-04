@@ -1,173 +1,115 @@
 "use client";
-import { useState } from "react";
-import { Star, ChevronLeft, ChevronRight, Quote } from "lucide-react";
-import { useScrollReveal } from "@/hooks/useScrollReveal";
+
+import { useCallback, useEffect, useState } from "react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { ChevronLeft, ChevronRight, Quote, Star } from "lucide-react";
 import { REVIEWS } from "@/lib/constants";
+import SectionHeading from "./SectionHeading";
 
 export default function Reviews() {
-  const [current, setCurrent] = useState(0);
-  const ref = useScrollReveal<HTMLDivElement>(".reveal-item", { stagger: 0.1 });
+  const [idx, setIdx] = useState(0);
+  const [dir, setDir] = useState(1);
+  const [paused, setPaused] = useState(false);
+  const reduce = useReducedMotion();
 
-  const prev = () => setCurrent((c) => (c - 1 + REVIEWS.length) % REVIEWS.length);
-  const next = () => setCurrent((c) => (c + 1) % REVIEWS.length);
+  const go = useCallback((d: number) => {
+    setDir(d);
+    setIdx((i) => (i + d + REVIEWS.length) % REVIEWS.length);
+  }, []);
 
-  const r = REVIEWS[current];
+  useEffect(() => {
+    if (paused || reduce) return;
+    const t = setInterval(() => {
+      setDir(1);
+      setIdx((i) => (i + 1) % REVIEWS.length);
+    }, 6500);
+    return () => clearInterval(t);
+  }, [paused, reduce]);
+
+  const r = REVIEWS[idx];
+  const variants = {
+    enter: (d: number) => ({ opacity: 0, x: reduce ? 0 : d > 0 ? 64 : -64 }),
+    center: { opacity: 1, x: 0 },
+    exit: (d: number) => ({ opacity: 0, x: reduce ? 0 : d > 0 ? -64 : 64 }),
+  };
 
   return (
-    <section
-      className="relative overflow-hidden"
-      style={{ paddingTop: "120px", paddingBottom: "120px" }}
-    >
-      <div
-        className="absolute pointer-events-none"
-        aria-hidden
-        style={{
-          left: "50%", top: "50%", transform: "translate(-50%,-50%)",
-          width: "700px", height: "400px", borderRadius: "50%",
-          background: "radial-gradient(ellipse, rgba(74,143,196,0.10) 0%, transparent 70%)",
-          filter: "blur(100px)",
-        }}
-      />
+    <section className="relative px-4 py-20 sm:px-6 md:py-28">
+      <div className="mx-auto max-w-7xl">
+        <SectionHeading
+          eyebrow="Отзывы"
+          title={<>Что говорят <span className="gradient-text">заказчики</span></>}
+          center
+        />
 
-      <div ref={ref} className="max-w-4xl mx-auto px-6 lg:px-10 xl:px-12">
         <div
-          className="reveal-item section-label mb-6"
-          style={{ justifyContent: "center" }}
+          className="relative mx-auto mt-12 max-w-3xl"
+          onMouseEnter={() => setPaused(true)}
+          onMouseLeave={() => setPaused(false)}
         >
-          Отзывы клиентов
-        </div>
-
-        <div className="reveal-item text-center mb-12">
-          <h2
-            style={{
-              fontSize: "clamp(26px, 3vw, 46px)",
-              fontWeight: 700, letterSpacing: "-0.025em", lineHeight: 1.1,
-              color: "#ddeeff",
-            }}
-          >
-            Говорят те, кто{" "}
-            <span className="gradient-text">работает с нами</span>
-          </h2>
-        </div>
-
-        <div className="reveal-item">
-          <div
-            className="glass relative overflow-hidden"
-            style={{ padding: "48px 48px 44px" }}
-          >
-            {/* Big faint quote */}
-            <div
-              className="absolute pointer-events-none"
-              aria-hidden
-              style={{ top: 20, right: 28, opacity: 0.06 }}
-            >
-              <Quote size={100} style={{ color: "#5aaee8" }} />
-            </div>
-
-            {/* Stars */}
-            <div className="flex gap-1 mb-6">
-              {Array.from({ length: r.rating }).map((_, i) => (
-                <Star
-                  key={i}
-                  size={15}
-                  style={{ color: "#5aaee8", fill: "#5aaee8" }}
-                />
-              ))}
-            </div>
-
-            {/* Quote */}
-            <blockquote
-              style={{
-                fontSize: "clamp(17px, 2vw, 22px)",
-                fontWeight: 400, lineHeight: 1.72,
-                color: "rgba(221,238,255,0.82)",
-                marginBottom: "32px",
-                position: "relative", zIndex: 1,
-              }}
-            >
-              «{r.text}»
-            </blockquote>
-
-            {/* Author + controls */}
-            <div className="flex items-center justify-between gap-4 flex-wrap">
-              <div>
-                <div
-                  style={{
-                    fontSize: "15px", fontWeight: 700,
-                    color: "#ddeeff", marginBottom: "3px",
-                  }}
+          <div className="relative overflow-hidden rounded-3xl border border-[#5286AC]/20 bg-[#003556]/40 p-8 backdrop-blur-xl md:p-12">
+            <Quote size={56} className="text-[var(--accent)]/25" />
+            <div className="relative min-h-[210px] sm:min-h-[180px]">
+              <AnimatePresence mode="wait" custom={dir}>
+                <motion.div
+                  key={idx}
+                  custom={dir}
+                  variants={variants}
+                  initial="enter"
+                  animate="center"
+                  exit="exit"
+                  transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
                 >
-                  {r.name}
-                </div>
-                <div style={{ fontSize: "13px", color: "rgba(90,174,232,0.70)", fontWeight: 500 }}>
-                  {r.title}
-                </div>
-              </div>
-
-              <div className="flex items-center gap-3">
-                <button
-                  onClick={prev}
-                  aria-label="Предыдущий"
-                  className="t-all flex items-center justify-center rounded-full"
-                  style={{
-                    width: 40, height: 40,
-                    border: "1px solid rgba(90,174,232,0.20)",
-                    color: "rgba(221,238,255,0.50)",
-                    background: "transparent",
-                  }}
-                  onMouseEnter={(e) => {
-                    (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(90,174,232,0.50)";
-                    (e.currentTarget as HTMLButtonElement).style.color = "#ddeeff";
-                  }}
-                  onMouseLeave={(e) => {
-                    (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(90,174,232,0.20)";
-                    (e.currentTarget as HTMLButtonElement).style.color = "rgba(221,238,255,0.50)";
-                  }}
-                >
-                  <ChevronLeft size={18} />
-                </button>
-                <button
-                  onClick={next}
-                  aria-label="Следующий"
-                  className="t-all flex items-center justify-center rounded-full"
-                  style={{
-                    width: 40, height: 40,
-                    border: "1px solid rgba(90,174,232,0.20)",
-                    color: "rgba(221,238,255,0.50)",
-                    background: "transparent",
-                  }}
-                  onMouseEnter={(e) => {
-                    (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(90,174,232,0.50)";
-                    (e.currentTarget as HTMLButtonElement).style.color = "#ddeeff";
-                  }}
-                  onMouseLeave={(e) => {
-                    (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(90,174,232,0.20)";
-                    (e.currentTarget as HTMLButtonElement).style.color = "rgba(221,238,255,0.50)";
-                  }}
-                >
-                  <ChevronRight size={18} />
-                </button>
-              </div>
+                  <div className="mb-5 flex gap-1">
+                    {Array.from({ length: 5 }).map((_, i) => (
+                      <Star key={i} size={16} className="text-[var(--accent-bright)]" fill="currentColor" />
+                    ))}
+                  </div>
+                  <p className="text-[16px] leading-relaxed text-[var(--ink)] md:text-[18px]">{r.text}</p>
+                  <div className="mt-7">
+                    <div className="font-display text-[16px] font-semibold text-white">{r.name}</div>
+                    <div className="text-[13.5px] text-[var(--ink-muted)]">
+                      {r.title} · {r.company}
+                    </div>
+                  </div>
+                </motion.div>
+              </AnimatePresence>
             </div>
           </div>
 
-          {/* Dots */}
-          <div className="flex justify-center gap-2 mt-5">
-            {REVIEWS.map((_, i) => (
+          {/* Controls */}
+          <div className="mt-6 flex items-center justify-between">
+            <div className="flex gap-2">
+              {REVIEWS.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => {
+                    setDir(i > idx ? 1 : -1);
+                    setIdx(i);
+                  }}
+                  aria-label={`Отзыв ${i + 1}`}
+                  className={`h-2 rounded-full transition-all duration-300 ${
+                    i === idx ? "w-7 bg-[var(--accent-bright)]" : "w-2 bg-[var(--ink-faint)] hover:bg-[var(--ink-muted)]"
+                  }`}
+                />
+              ))}
+            </div>
+            <div className="flex gap-2">
               <button
-                key={i}
-                onClick={() => setCurrent(i)}
-                aria-label={`Отзыв ${i + 1}`}
-                className="t-all rounded-full"
-                style={{
-                  width: i === current ? 24 : 8,
-                  height: 8,
-                  background: i === current
-                    ? "#5aaee8"
-                    : "rgba(90,174,232,0.25)",
-                }}
-              />
-            ))}
+                onClick={() => go(-1)}
+                aria-label="Предыдущий отзыв"
+                className="grid h-11 w-11 place-items-center rounded-full border border-[#5286AC]/20 bg-[#003556]/40 text-[var(--ink)] backdrop-blur-xl transition-colors hover:border-[var(--glass-border-lit)] hover:text-white"
+              >
+                <ChevronLeft size={18} />
+              </button>
+              <button
+                onClick={() => go(1)}
+                aria-label="Следующий отзыв"
+                className="grid h-11 w-11 place-items-center rounded-full border border-[#5286AC]/20 bg-[#003556]/40 text-[var(--ink)] backdrop-blur-xl transition-colors hover:border-[var(--glass-border-lit)] hover:text-white"
+              >
+                <ChevronRight size={18} />
+              </button>
+            </div>
           </div>
         </div>
       </div>

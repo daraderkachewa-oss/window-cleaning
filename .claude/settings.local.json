@@ -13,7 +13,15 @@
       "Bash(kill %1)",
       "Bash(git add *)",
       "Bash(git commit -m ' *)",
-      "WebFetch(domain:halotemplate.framer.website)"
+      "WebFetch(domain:halotemplate.framer.website)",
+      "WebFetch(domain:api.github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(curl -s \"https://raw.githubusercontent.com/anthropics/skills/main/skills/frontend-design/SKILL.md\")",
+      "Bash(mkdir -p ~/.claude/skills/frontend-design)",
+      "WebFetch(domain:github.com)",
+      "Bash(curl -s \"https://raw.githubusercontent.com/anthropics/skills/main/skills/theme-factory/SKILL.md\" > ~/.claude/skills/theme-factory/SKILL.md && echo \"ok\")",
+      "Bash(curl -s \"https://raw.githubusercontent.com/anthropics/skills/main/skills/brand-guidelines/SKILL.md\" > ~/.claude/skills/brand-guidelines/SKILL.md && echo \"ok\")",
+      "Bash(curl -s \"https://raw.githubusercontent.com/anthropics/skills/main/skills/web-artifacts-builder/SKILL.md\" > ~/.claude/skills/web-artifacts-builder/SKILL.md && echo \"ok\")"
     ]
   }
 }

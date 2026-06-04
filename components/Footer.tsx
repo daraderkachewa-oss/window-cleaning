@@ -1,229 +1,99 @@
-"use client";
-import Image from "next/image";
-import { Phone, Mail, MessageCircle } from "lucide-react";
-import { CONTACTS, REQUISITES } from "@/lib/constants";
-
-const NAV_LINKS = [
-  { label: "Услуги",      href: "#services" },
-  { label: "Наши работы", href: "#cases"    },
-  { label: "О компании",  href: "#about"    },
-  { label: "Клиенты",     href: "#clients"  },
-  { label: "Контакты",    href: "#contact"  },
-];
-
-const SERVICES_LIST = [
-  "Мойка стеклянных фасадов",
-  "Мойка витражного остекления",
-  "Мойка панорамных окон",
-  "Послестроительная очистка",
-  "Регулярное обслуживание",
-];
+import Link from "next/link";
+import { NAV, CONTACTS, REQUISITES } from "@/lib/constants";
+import { PhoneIcon, TelegramIcon, MailIcon } from "./Icon";
+import Logo from "./Logo";
 
 export default function Footer() {
-  const scrollTo = (href: string) =>
-    document.querySelector(href)?.scrollIntoView({ behavior: "smooth" });
+  const year = new Date().getFullYear();
 
   return (
-    <footer
-      className="relative overflow-hidden"
-      style={{
-        paddingTop: "64px", paddingBottom: "32px",
-        borderTop: "1px solid rgba(90,174,232,0.10)",
-        background: "rgba(0,16,30,0.60)",
-      }}
-    >
-      <div className="max-w-7xl mx-auto px-6 lg:px-10 xl:px-12">
-        <div className="grid lg:grid-cols-4 gap-10 mb-14">
+    <footer className="relative px-4 pb-8 pt-10 sm:px-6">
+      <div className="mx-auto max-w-7xl">
+        <div className="liquid-glass rounded-[2rem] p-8 md:p-12">
+          <div className="relative z-10 grid gap-10 lg:grid-cols-[1.3fr_0.8fr_1.2fr_1fr]">
+            {/* Brand */}
+            <div>
+              <Logo height={48} />
+              <p className="mt-5 max-w-xs text-[13.5px] leading-relaxed text-[var(--ink-muted)]">
+                Профильная мойка остекления фасадов коммерческой недвижимости. Работаем по{" "}
+                {CONTACTS.region}.
+              </p>
+            </div>
 
-          {/* Brand */}
-          <div>
-            <button
-              onClick={() => scrollTo("#hero")}
-              className="flex items-center gap-3 mb-5"
-            >
-              <div className="w-9 h-9 relative">
-                <Image src="/logo.svg" alt="Логотип" fill className="object-contain" />
+            {/* Nav */}
+            <div>
+              <div className="mb-4 text-[12px] font-semibold uppercase tracking-wider text-[var(--ink-muted)]">
+                Навигация
               </div>
-              <span
-                style={{
-                  fontSize: "12px", fontWeight: 700,
-                  letterSpacing: "0.20em", textTransform: "uppercase",
-                  color: "rgba(221,238,255,0.80)",
-                }}
-              >
-                ЯМЩИК
-              </span>
-            </button>
-            <p style={{ fontSize: "13px", lineHeight: 1.7, color: "rgba(221,238,255,0.38)", marginBottom: "18px" }}>
-              Профессиональная мойка фасадного остекления коммерческой недвижимости в Москве и МО.
-            </p>
-            <div className="flex flex-col gap-2.5">
-              <a
-                href={CONTACTS.director.phoneHref}
-                className="flex items-center gap-2 t-all"
-                style={{ fontSize: "13px", color: "rgba(221,238,255,0.45)" }}
-                onMouseEnter={(e) => (e.currentTarget.style.color = "rgba(221,238,255,0.80)")}
-                onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(221,238,255,0.45)")}
-              >
-                <Phone size={13} style={{ color: "#5aaee8" }} />
-                {CONTACTS.director.phone}
-              </a>
-              <a
-                href={`mailto:${CONTACTS.email}`}
-                className="flex items-center gap-2 t-all"
-                style={{ fontSize: "13px", color: "rgba(221,238,255,0.45)" }}
-                onMouseEnter={(e) => (e.currentTarget.style.color = "rgba(221,238,255,0.80)")}
-                onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(221,238,255,0.45)")}
-              >
-                <Mail size={13} style={{ color: "#5aaee8" }} />
-                {CONTACTS.email}
-              </a>
-              <a
-                href={CONTACTS.telegram}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 t-all"
-                style={{ fontSize: "13px", color: "rgba(221,238,255,0.45)" }}
-                onMouseEnter={(e) => (e.currentTarget.style.color = "rgba(221,238,255,0.80)")}
-                onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(221,238,255,0.45)")}
-              >
-                <MessageCircle size={13} style={{ color: "#5aaee8" }} />
-                Telegram
-              </a>
+              <ul className="space-y-2.5 text-[14px]">
+                {NAV.map((n) => (
+                  <li key={n.href}>
+                    <a href={n.href} className="liquid-link">
+                      {n.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
             </div>
-          </div>
 
-          {/* Nav */}
-          <div>
-            <div
-              style={{
-                fontSize: "11px", fontWeight: 700,
-                letterSpacing: "0.18em", textTransform: "uppercase",
-                color: "rgba(221,238,255,0.35)", marginBottom: "18px",
-              }}
-            >
-              Навигация
-            </div>
-            <ul className="flex flex-col gap-3">
-              {NAV_LINKS.map((l) => (
-                <li key={l.href}>
-                  <button
-                    onClick={() => scrollTo(l.href)}
-                    className="t-all text-left"
-                    style={{ fontSize: "13px", color: "rgba(221,238,255,0.45)" }}
-                    onMouseEnter={(e) => (e.currentTarget.style.color = "rgba(221,238,255,0.80)")}
-                    onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(221,238,255,0.45)")}
-                  >
-                    {l.label}
-                  </button>
+            {/* Contacts */}
+            <div>
+              <div className="mb-4 text-[12px] font-semibold uppercase tracking-wider text-[var(--ink-muted)]">
+                Контакты
+              </div>
+              <ul className="space-y-3 text-[14px]">
+                <li className="flex items-center gap-2">
+                  <PhoneIcon size={16} className="text-[var(--accent)]" />
+                  <a href={CONTACTS.director.phoneHref} className="liquid-link">
+                    {CONTACTS.director.phone}
+                  </a>
+                  <a href={CONTACTS.director.telegram} target="_blank" rel="noopener noreferrer" aria-label="Telegram" className="text-[var(--accent)] hover:text-white">
+                    <TelegramIcon size={15} />
+                  </a>
                 </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Services */}
-          <div>
-            <div
-              style={{
-                fontSize: "11px", fontWeight: 700,
-                letterSpacing: "0.18em", textTransform: "uppercase",
-                color: "rgba(221,238,255,0.35)", marginBottom: "18px",
-              }}
-            >
-              Услуги
-            </div>
-            <ul className="flex flex-col gap-3">
-              {SERVICES_LIST.map((s) => (
-                <li key={s}>
-                  <button
-                    onClick={() => scrollTo("#services")}
-                    className="t-all text-left"
-                    style={{ fontSize: "13px", color: "rgba(221,238,255,0.45)" }}
-                    onMouseEnter={(e) => (e.currentTarget.style.color = "rgba(221,238,255,0.80)")}
-                    onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(221,238,255,0.45)")}
-                  >
-                    {s}
-                  </button>
+                <li className="flex items-center gap-2">
+                  <PhoneIcon size={16} className="text-[var(--accent)]" />
+                  <a href={CONTACTS.specialist.phoneHref} className="liquid-link">
+                    {CONTACTS.specialist.phone}
+                  </a>
+                  <a href={CONTACTS.specialist.telegram} target="_blank" rel="noopener noreferrer" aria-label="Telegram" className="text-[var(--accent)] hover:text-white">
+                    <TelegramIcon size={15} />
+                  </a>
                 </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* CTA + Реквизиты */}
-          <div>
-            <div
-              style={{
-                fontSize: "11px", fontWeight: 700,
-                letterSpacing: "0.18em", textTransform: "uppercase",
-                color: "rgba(221,238,255,0.35)", marginBottom: "14px",
-              }}
-            >
-              Быстрый расчет
+                <li className="flex items-center gap-2">
+                  <MailIcon size={16} className="text-[var(--accent)]" />
+                  <a href={CONTACTS.emailHref} className="liquid-link">
+                    {CONTACTS.email}
+                  </a>
+                </li>
+              </ul>
             </div>
-            <p style={{ fontSize: "13px", lineHeight: 1.65, color: "rgba(221,238,255,0.40)", marginBottom: "16px" }}>
-              Расчет стоимости — 30 минут после осмотра. Выезд на объект бесплатно.
-            </p>
-            <button
-              onClick={() => scrollTo("#contact")}
-              className="btn-primary w-full justify-center text-sm mb-5"
-              style={{ padding: "12px 20px" }}
-            >
-              Получить расчет
-            </button>
 
-            <div
-              style={{
-                padding: "14px 16px",
-                borderRadius: "12px",
-                border: "1px solid rgba(90,174,232,0.10)",
-                background: "rgba(74,143,196,0.05)",
-              }}
-            >
-              <div
-                style={{
-                  fontSize: "10px", fontWeight: 700,
-                  letterSpacing: "0.14em", textTransform: "uppercase",
-                  color: "rgba(90,174,232,0.40)", marginBottom: "8px",
-                }}
-              >
+            {/* Requisites */}
+            <div>
+              <div className="mb-4 text-[12px] font-semibold uppercase tracking-wider text-[var(--ink-muted)]">
                 Реквизиты
               </div>
-              <div style={{ fontSize: "11px", lineHeight: 1.8, color: "rgba(221,238,255,0.38)" }}>
-                {REQUISITES.name}<br />
-                ИНН: {REQUISITES.inn}<br />
-                ОГРНИП: {REQUISITES.ogrnip}
+              <div className="text-[13px] leading-relaxed text-[var(--ink-muted)]">
+                <div className="text-[var(--ink-dim)]">{REQUISITES.name}</div>
+                <div className="mt-2">ИНН {REQUISITES.inn}</div>
+                <div>ОГРНИП {REQUISITES.ogrnip}</div>
               </div>
             </div>
           </div>
-        </div>
 
-        {/* Bottom bar */}
-        <div
-          className="flex flex-col sm:flex-row items-center justify-between gap-3"
-          style={{ borderTop: "1px solid rgba(90,174,232,0.08)", paddingTop: "24px" }}
-        >
-          <p style={{ fontSize: "11px", color: "rgba(221,238,255,0.25)" }}>
-            © {new Date().getFullYear()} {REQUISITES.name}. Все права защищены.
-          </p>
-          <div className="flex gap-5">
-            <a
-              href="/privacy"
-              className="t-all"
-              style={{ fontSize: "11px", color: "rgba(221,238,255,0.25)" }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = "rgba(221,238,255,0.55)")}
-              onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(221,238,255,0.25)")}
-            >
-              Политика конфиденциальности
-            </a>
-            <a
-              href="/terms"
-              className="t-all"
-              style={{ fontSize: "11px", color: "rgba(221,238,255,0.25)" }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = "rgba(221,238,255,0.55)")}
-              onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(221,238,255,0.25)")}
-            >
-              Условия использования
-            </a>
+          <div className="divider-line relative z-10 my-8" />
+
+          <div className="relative z-10 flex flex-col items-center justify-between gap-4 text-[13px] text-[var(--ink-muted)] sm:flex-row">
+            <span>© {year} {REQUISITES.name}. Все права защищены.</span>
+            <div className="flex gap-6">
+              <Link href="/privacy" className="liquid-link">
+                Политика конфиденциальности
+              </Link>
+              <Link href="/terms" className="liquid-link">
+                Условия использования
+              </Link>
+            </div>
           </div>
         </div>
       </div>

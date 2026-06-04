@@ -1,123 +1,44 @@
 "use client";
-import { useRef, MouseEvent } from "react";
-import { Droplets, Ruler, Wrench, Leaf } from "lucide-react";
-import { useScrollReveal } from "@/hooks/useScrollReveal";
+
+import Image from "next/image";
 import { TECHNOLOGIES } from "@/lib/constants";
-
-const ICONS = [Droplets, Ruler, Wrench, Leaf];
-
-function GlowCard({
-  title, description, detail, index,
-}: {
-  title: string; description: string; detail: string; index: number;
-}) {
-  const cardRef = useRef<HTMLDivElement>(null);
-  const Icon = ICONS[index];
-
-  const onMouseMove = (e: MouseEvent<HTMLDivElement>) => {
-    const rect = cardRef.current?.getBoundingClientRect();
-    if (!rect) return;
-    cardRef.current!.style.setProperty("--mx", `${((e.clientX - rect.left) / rect.width) * 100}%`);
-    cardRef.current!.style.setProperty("--my", `${((e.clientY - rect.top) / rect.height) * 100}%`);
-  };
-
-  return (
-    <div
-      ref={cardRef}
-      className="reveal-item glass glow-card flex flex-col gap-5 cursor-default"
-      style={{ padding: "28px 28px 32px" }}
-      onMouseMove={onMouseMove}
-    >
-      <div className="flex items-start justify-between gap-3">
-        <div
-          className="flex items-center justify-center rounded-2xl shrink-0"
-          style={{
-            width: 48, height: 48,
-            background: "rgba(74,143,196,0.12)",
-            border: "1px solid rgba(90,174,232,0.18)",
-          }}
-        >
-          <Icon size={20} style={{ color: "#5aaee8" }} />
-        </div>
-        <span
-          style={{
-            fontSize: "10px", fontWeight: 700,
-            letterSpacing: "0.14em", textTransform: "uppercase",
-            color: "rgba(90,174,232,0.70)",
-            background: "rgba(74,143,196,0.08)",
-            border: "1px solid rgba(90,174,232,0.14)",
-            borderRadius: "999px",
-            padding: "4px 10px",
-            whiteSpace: "nowrap",
-          }}
-        >
-          {detail}
-        </span>
-      </div>
-      <div>
-        <h3
-          style={{
-            fontSize: "17px", fontWeight: 700,
-            letterSpacing: "-0.01em", color: "#ddeeff",
-            marginBottom: "10px",
-          }}
-        >
-          {title}
-        </h3>
-        <p style={{ fontSize: "13.5px", lineHeight: 1.72, color: "rgba(221,238,255,0.52)" }}>
-          {description}
-        </p>
-      </div>
-    </div>
-  );
-}
+import SectionHeading from "./SectionHeading";
+import GlowCard from "./motion/GlowCard";
+import { Stagger, StaggerItem } from "./motion/Stagger";
 
 export default function Technologies() {
-  const ref = useScrollReveal<HTMLDivElement>(".reveal-item", { stagger: 0.11 });
-
   return (
-    <section
-      className="relative overflow-hidden"
-      style={{ paddingTop: "100px", paddingBottom: "100px" }}
-    >
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background: "linear-gradient(180deg, transparent 0%, rgba(13,74,119,0.10) 50%, transparent 100%)",
-        }}
-      />
+    <section className="relative px-4 py-20 sm:px-6 md:py-28">
+      <div className="mx-auto max-w-7xl">
+        <SectionHeading
+          eyebrow="Технологии"
+          title={<>Технологии, которые <span className="gradient-text">видно на стекле</span></>}
+          subtitle="Оборудование и материалы, обеспечивающие результат без разводов и вреда для конструкций."
+        />
 
-      <div ref={ref} className="max-w-7xl mx-auto px-6 lg:px-10 xl:px-12">
-        <div className="reveal-item section-label mb-6">Технологии</div>
-
-        <div className="reveal-item grid lg:grid-cols-2 gap-5 items-end mb-14">
-          <h2
-            style={{
-              fontSize: "clamp(28px, 3.2vw, 50px)",
-              fontWeight: 700, letterSpacing: "-0.025em", lineHeight: 1.1,
-              color: "#ddeeff",
-            }}
-          >
-            Оборудование —{" "}
-            <span className="gradient-text">наше конкурентное преимущество</span>
-          </h2>
-          <p style={{ fontSize: "16px", lineHeight: 1.75, color: "rgba(221,238,255,0.52)" }}>
-            Собственный парк профессионального оборудования позволяет контролировать качество
-            и соблюдать сроки независимо от внешних факторов.
-          </p>
-        </div>
-
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {TECHNOLOGIES.map(({ title, description, detail }, i) => (
-            <GlowCard
-              key={title}
-              title={title}
-              description={description}
-              detail={detail}
-              index={i}
-            />
+        <Stagger className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {TECHNOLOGIES.map((t) => (
+            <StaggerItem key={t.title}>
+              <GlowCard className="group relative h-[380px] overflow-hidden rounded-3xl border border-[#5286AC]/20">
+                <Image
+                  src={t.image}
+                  alt={t.title}
+                  fill
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                  className="object-cover transition-transform duration-[900ms] ease-out group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#04101d] via-[#04101d]/55 to-[#04101d]/15" />
+                <span className="absolute left-5 top-5 rounded-full border border-[#5286AC]/30 bg-[#0a1a2f]/70 px-3 py-1 text-[11px] font-medium tracking-wide text-[var(--accent-bright)] backdrop-blur-md">
+                  {t.detail}
+                </span>
+                <div className="absolute inset-x-0 bottom-0 p-6">
+                  <h3 className="font-display text-lg font-semibold text-white">{t.title}</h3>
+                  <p className="mt-2 text-[13.5px] leading-relaxed text-[var(--ink-dim)]">{t.text}</p>
+                </div>
+              </GlowCard>
+            </StaggerItem>
           ))}
-        </div>
+        </Stagger>
       </div>
     </section>
   );

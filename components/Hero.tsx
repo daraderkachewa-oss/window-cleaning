@@ -1,349 +1,206 @@
 "use client";
-import { useEffect, useRef } from "react";
+
 import Image from "next/image";
-import { gsap } from "gsap";
-import { ArrowRight, Shield, Clock, FileText, MapPin } from "lucide-react";
+import { motion, useReducedMotion } from "motion/react";
+import { ArrowRight, ShieldCheck, Star } from "lucide-react";
+import MagneticButton from "./motion/MagneticButton";
+import { CONTACTS } from "@/lib/constants";
+
+const EASE = [0.16, 1, 0.3, 1] as const;
 
 export default function Hero() {
-  const rootRef = useRef<HTMLElement>(null);
+  const reduce = useReducedMotion();
 
-  useEffect(() => {
-    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (prefersReduced) return;
-
-    const ctx = gsap.context(() => {
-      /* Орбы — появляются первыми, масштаб из нуля */
-      gsap.fromTo(".hero-orb", { scale: 0.4, opacity: 0 }, {
-        scale: 1, opacity: 1, duration: 2.4, ease: "power2.out", stagger: 0.3,
-      });
-
-      /* Основной контент — снизу вверх */
-      const tl = gsap.timeline({ delay: 0.25 });
-      tl.fromTo(".hero-eyebrow",
-        { opacity: 0, y: 16 },
-        { opacity: 1, y: 0, duration: 0.65, ease: "power3.out" })
-        .fromTo(".hero-h1 .line",
-          { opacity: 0, y: 48, skewX: -2 },
-          { opacity: 1, y: 0, skewX: 0, duration: 0.85, stagger: 0.12, ease: "power3.out" }, "-=0.3")
-        .fromTo(".hero-sub",
-          { opacity: 0, y: 20 },
-          { opacity: 1, y: 0, duration: 0.65, ease: "power3.out" }, "-=0.4")
-        .fromTo(".hero-badge",
-          { opacity: 0, y: 10 },
-          { opacity: 1, y: 0, duration: 0.5, stagger: 0.08, ease: "power3.out" }, "-=0.35")
-        .fromTo(".hero-cta",
-          { opacity: 0, y: 14 },
-          { opacity: 1, y: 0, duration: 0.55, stagger: 0.1, ease: "power3.out" }, "-=0.3")
-        .fromTo(".hero-card",
-          { opacity: 0, x: 50 },
-          { opacity: 1, x: 0, duration: 0.9, ease: "power3.out" }, "-=0.6")
-        .fromTo(".hero-scroll-hint",
-          { opacity: 0 },
-          { opacity: 1, duration: 0.4 }, "-=0.1");
-    }, rootRef);
-
-    return () => ctx.revert();
-  }, []);
-
-  const goto = (id: string) =>
-    document.querySelector(id)?.scrollIntoView({ behavior: "smooth" });
+  const container = {
+    hidden: {},
+    show: { transition: { staggerChildren: 0.1, delayChildren: 0.2 } },
+  };
+  const item = {
+    hidden: { opacity: 0, y: 28 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.75, ease: EASE } },
+  };
 
   return (
-    <section
-      id="hero"
-      ref={rootRef}
-      className="relative min-h-[100svh] flex items-center overflow-hidden"
-      style={{ paddingTop: "80px" }}
-    >
-      {/* ── Ambient orbs ───────────────────────────────────── */}
-      <div className="absolute inset-0 pointer-events-none" aria-hidden>
-        {/* Большой cyan-glow справа-сверху — главная доминанта */}
-        <div
-          className="hero-orb orb-1 absolute"
-          style={{
-            top: "-12%", right: "-8%",
-            width: "720px", height: "720px",
-            borderRadius: "50%",
-            background: "radial-gradient(circle, rgba(74,143,196,0.55) 0%, rgba(74,143,196,0.18) 45%, transparent 72%)",
-            filter: "blur(72px)",
-          }}
-        />
-        {/* Синеватый glow слева-снизу */}
-        <div
-          className="hero-orb orb-2 absolute"
-          style={{
-            bottom: "-15%", left: "-10%",
-            width: "640px", height: "640px",
-            borderRadius: "50%",
-            background: "radial-gradient(circle, rgba(16,87,133,0.60) 0%, rgba(16,87,133,0.18) 50%, transparent 72%)",
-            filter: "blur(90px)",
-          }}
-        />
-        {/* Маленький highlight по центру */}
-        <div
-          className="hero-orb orb-3 absolute"
-          style={{
-            top: "38%", left: "42%",
-            width: "320px", height: "320px",
-            borderRadius: "50%",
-            background: "radial-gradient(circle, rgba(90,174,232,0.18) 0%, transparent 70%)",
-            filter: "blur(60px)",
-          }}
-        />
+    <section id="top" className="relative flex min-h-[100svh] flex-col overflow-hidden">
 
-        {/* Тонкая сетка — noise texture */}
-        <div
-          className="absolute inset-0 opacity-[0.025]"
-          style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%235aaee8' fill-opacity='1'%3E%3Ccircle cx='0.5' cy='0.5' r='0.5'/%3E%3C/g%3E%3C/svg%3E")`,
-          }}
-        />
-      </div>
+      {/* Z-0: Full-bleed photo background */}
+      <Image
+        src="/images/hero.jpg"
+        alt="Промышленный альпинист моет остекление стеклянного фасада небоскрёба"
+        fill
+        priority
+        sizes="100vw"
+        className="object-cover object-[center_28%]"
+        style={{ zIndex: 0 }}
+      />
 
-      {/* ── Layout ─────────────────────────────────────────── */}
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-6 lg:px-10 xl:px-12 py-20 lg:py-28">
-        <div className="grid lg:grid-cols-[1fr_420px] xl:grid-cols-[1fr_460px] gap-12 xl:gap-20 items-center">
-
-          {/* LEFT ─ Text */}
-          <div>
-            {/* Eyebrow */}
-            <div className="hero-eyebrow glass-soft inline-flex items-center gap-2.5 px-4 py-2 mb-8">
-              <MapPin size={12} className="text-[#5aaee8]" />
-              <span
-                className="text-[#5aaee8] font-[600]"
-                style={{ fontSize: "11px", letterSpacing: "0.18em" }}
-              >
-                МОСКВА И МОСКОВСКАЯ ОБЛАСТЬ
-              </span>
-            </div>
-
-            {/* H1 — three visually separate lines */}
-            <h1
-              className="hero-h1 font-[800] leading-[1.02] mb-6"
-              style={{
-                fontSize: "clamp(46px, 5.8vw, 84px)",
-                letterSpacing: "-0.03em",
-                color: "#ddeeff",
-              }}
-            >
-              <span className="line block">Безупречно чистое</span>
-              <span
-                className="line block gradient-text"
-                style={{ paddingBottom: "0.06em" }}
-              >
-                фасадное
-              </span>
-              <span className="line block">остекление.</span>
-            </h1>
-
-            {/* Sub */}
-            <p
-              className="hero-sub leading-[1.75] mb-10 max-w-xl"
-              style={{
-                fontSize: "clamp(15px, 1.5vw, 18px)",
-                color: "rgba(221,238,255,0.60)",
-                fontWeight: 400,
-              }}
-            >
-              Работаем с управляющими компаниями, бизнес-центрами и ТРЦ
-              по договору. Фотоотчет после каждого выезда, полный пакет
-              закрывающих документов, соблюдение сроков — закреплено контрактом.
-            </p>
-
-            {/* Trust badges */}
-            <div className="flex flex-wrap gap-2.5 mb-10">
-              {[
-                { Icon: Shield,   text: "Безопасные технологии" },
-                { Icon: Clock,    text: "Без остановки объекта"  },
-                { Icon: FileText, text: "Договор и документы"    },
-              ].map(({ Icon, text }) => (
-                <div
-                  key={text}
-                  className="hero-badge glass-soft flex items-center gap-2 px-4 py-2"
-                >
-                  <Icon size={13} className="text-[#5aaee8] shrink-0" />
-                  <span
-                    style={{
-                      fontSize: "12px", fontWeight: 500,
-                      color: "rgba(221,238,255,0.70)",
-                    }}
-                  >
-                    {text}
-                  </span>
-                </div>
-              ))}
-            </div>
-
-            {/* CTAs */}
-            <div className="flex flex-col sm:flex-row gap-3">
-              <button
-                className="hero-cta btn-primary text-sm"
-                onClick={() => goto("#contact")}
-              >
-                Получить расчет <ArrowRight size={15} />
-              </button>
-              <button
-                className="hero-cta btn-ghost text-sm"
-                onClick={() => goto("#contact")}
-              >
-                Заказать аудит объекта
-              </button>
-            </div>
-          </div>
-
-          {/* RIGHT ─ Visual card */}
-          <div className="hero-card hidden lg:block">
-            <GlassCard goto={goto} />
-          </div>
-        </div>
-      </div>
-
-      {/* Scroll hint */}
+      {/* Z-1: Cinematic veil — heavy blur with reveal window (upper-right) */}
       <div
-        className="hero-scroll-hint absolute bottom-7 left-1/2 -translate-x-1/2
-                   flex flex-col items-center gap-1.5"
         aria-hidden
-      >
-        <span
-          style={{
-            fontSize: "10px", fontWeight: 600,
-            letterSpacing: "0.22em", textTransform: "uppercase",
-            color: "rgba(90,174,232,0.50)",
-          }}
-        >
-          прокрутите
-        </span>
-        <div
-          className="w-px h-8"
-          style={{
-            background: "linear-gradient(to bottom, rgba(90,174,232,0.4), transparent)",
-          }}
-        />
+        style={{
+          position: "absolute",
+          inset: 0,
+          zIndex: 1,
+          backdropFilter: "blur(48px) saturate(115%)",
+          WebkitBackdropFilter: "blur(48px) saturate(115%)",
+          background: "linear-gradient(135deg, rgba(3,10,22,0.72) 0%, rgba(3,10,22,0.35) 55%, rgba(3,10,22,0.10) 100%)",
+          maskImage: "radial-gradient(58% 62% at 72% 30%, transparent 0%, rgba(0,0,0,0.55) 42%, rgba(0,0,0,0.92) 74%)",
+          WebkitMaskImage: "radial-gradient(58% 62% at 72% 30%, transparent 0%, rgba(0,0,0,0.55) 42%, rgba(0,0,0,0.92) 74%)",
+        }}
+      />
+
+      {/* Z-2: Mesh gradient orbs — atmospheric tinting over the veil */}
+      <div aria-hidden style={{ position: "absolute", inset: 0, zIndex: 2, pointerEvents: "none" }}>
+        <div style={{
+          position: "absolute", top: "5%", right: "3%",
+          width: 620, height: 620,
+          background: "radial-gradient(circle, rgba(14,165,233,0.18) 0%, transparent 70%)",
+          filter: "blur(120px)",
+          animation: "orb-float-a 20s ease-in-out infinite",
+          borderRadius: "50%",
+        }} />
+        <div style={{
+          position: "absolute", bottom: "10%", right: "12%",
+          width: 530, height: 530,
+          background: "radial-gradient(circle, rgba(29,78,216,0.22) 0%, transparent 70%)",
+          filter: "blur(120px)",
+          animation: "orb-float-b 26s ease-in-out infinite",
+          borderRadius: "50%",
+        }} />
+        <div style={{
+          position: "absolute", top: "40%", left: "8%",
+          width: 410, height: 410,
+          background: "radial-gradient(circle, rgba(14,165,233,0.12) 0%, transparent 70%)",
+          filter: "blur(120px)",
+          animation: "orb-float-c 18s ease-in-out infinite",
+          borderRadius: "50%",
+        }} />
       </div>
-    </section>
-  );
-}
 
-/* ── Floating glass card on the right ───────────────────────── */
-function GlassCard({ goto }: { goto: (id: string) => void }) {
-  return (
-    <div className="relative">
-      {/* Main panel */}
-      <div
-        className="glass glow-card"
-        style={{ padding: "2px" }} /* border-wrapper trick */
-      >
-        <div
-          className="rounded-[calc(1.5rem-2px)] overflow-hidden"
-          style={{ background: "rgba(0,24,46,0.70)" }}
-        >
-          {/* Фото-зона */}
-          <div
-            className="relative flex items-center justify-center"
-            style={{
-              height: "280px",
-              background: "linear-gradient(145deg, rgba(16,87,133,0.50) 0%, rgba(0,20,38,0.80) 100%)",
-            }}
-          >
-            {/* Декоративные линии архитектуры */}
-            {[220, 170, 120].map((s) => (
-              <div
-                key={s}
-                className="absolute rounded-full border"
-                style={{
-                  width: s, height: s,
-                  borderColor: "rgba(90,174,232,0.10)",
-                  top: "50%", left: "50%",
-                  transform: "translate(-50%,-50%)",
-                }}
-              />
-            ))}
-            {/* Logo faint overlay */}
-            <div className="opacity-[0.12] relative z-10">
-              <Image src="/logo.svg" alt="" width={90} height={118} className="object-contain" />
-            </div>
-            {/* Glow spot inside card */}
-            <div
-              className="absolute inset-0 pointer-events-none"
-              style={{
-                background: "radial-gradient(ellipse at 70% 30%, rgba(74,143,196,0.30) 0%, transparent 65%)",
-              }}
-            />
-          </div>
+      {/* Z-10: Content — anchored to bottom of viewport */}
+      <div className="relative flex flex-1 items-end" style={{ zIndex: 10 }}>
+        <div className="mx-auto w-full max-w-7xl grid grid-cols-1 items-start gap-12 px-6 pb-20 pt-40 lg:grid-cols-[1.3fr_0.7fr] lg:gap-20">
 
-          {/* Stats strip */}
-          <div
-            className="grid grid-cols-3 divide-x"
-            style={{ borderTop: "1px solid rgba(90,174,232,0.10)" }}
+          {/* LEFT — heading monument */}
+          <motion.div
+            variants={reduce ? undefined : container}
+            initial={reduce ? undefined : "hidden"}
+            animate={reduce ? undefined : "show"}
           >
-            {[
-              { n: "10+",   label: "лет опыта"  },
-              { n: "500+",  label: "объектов"   },
-              { n: "2 млн", label: "м² очищено" },
-            ].map(({ n, label }) => (
-              <div
-                key={label}
-                className="flex flex-col items-center py-5 gap-1"
-                style={{ borderRight: "1px solid rgba(90,174,232,0.10)" }}
-              >
-                <span
-                  style={{
-                    fontSize: "22px", fontWeight: 800,
-                    letterSpacing: "-0.02em", color: "#ddeeff",
-                  }}
+            <motion.span variants={reduce ? undefined : item} className="eyebrow">
+              {CONTACTS.region}
+            </motion.span>
+
+            <motion.h1
+              variants={reduce ? undefined : item}
+              className="display-xl mt-3 max-w-[720px] text-[clamp(2.2rem,3.8vw,3.8rem)]"
+              style={{ lineHeight: 1.08 }}
+            >
+              Мойка{" "}
+              <span className="gradient-text">остекления</span>
+              <br />
+              фасадов без остановки
+              <br />
+              работы объектов.
+            </motion.h1>
+          </motion.div>
+
+          {/* RIGHT — navigation block */}
+          <motion.div
+            variants={reduce ? undefined : container}
+            initial={reduce ? undefined : "hidden"}
+            animate={reduce ? undefined : "show"}
+            className="pb-1"
+          >
+            <motion.p
+              variants={reduce ? undefined : item}
+              className="text-[16px] leading-relaxed text-[var(--ink-dim)]"
+            >
+              Профессиональная мойка остекления фасадов с применением передовых технологий и
+              экосертифицированных средств. Работаем на территории Москвы и Московской области.
+            </motion.p>
+
+            <motion.div variants={reduce ? undefined : item} className="mt-8 inline-flex">
+              <div className="liquid-glass flex items-center gap-2 rounded-full p-1.5">
+                <a
+                  href="#services"
+                  className="relative z-10 rounded-full px-5 py-3 text-[15px] font-medium text-[var(--ink-dim)] transition-colors hover:text-white"
                 >
-                  {n}
-                </span>
-                <span
-                  style={{
-                    fontSize: "10px", fontWeight: 500,
-                    letterSpacing: "0.08em", color: "#5aaee8",
-                    textTransform: "uppercase",
-                  }}
-                >
-                  {label}
-                </span>
+                  Наши услуги
+                </a>
+                <MagneticButton href="#contacts" className="btn btn-primary relative z-10">
+                  Получить расчёт
+                  <ArrowRight size={18} />
+                </MagneticButton>
               </div>
-            ))}
-          </div>
+            </motion.div>
+
+            <motion.ul
+              variants={reduce ? undefined : item}
+              className="mt-6 flex flex-wrap gap-x-6 gap-y-3 text-[13px] text-[var(--ink-muted)]"
+            >
+              {["Договор с юрлицами", "Фотоотчёт по каждому выезду", "Гибкий график"].map((t) => (
+                <li key={t} className="flex items-center gap-2">
+                  <ShieldCheck size={15} className="text-[var(--accent-bright)]" />
+                  {t}
+                </li>
+              ))}
+            </motion.ul>
+          </motion.div>
+
         </div>
       </div>
 
-      {/* Floating chip — top left */}
-      <div
-        className="glass-soft absolute -left-10 top-14 flex items-center gap-2.5 px-4 py-3"
-        style={{ borderRadius: "1rem" }}
-      >
-        <div
-          className="w-8 h-8 rounded-full flex items-center justify-center shrink-0"
-          style={{ background: "rgba(90,174,232,0.15)", border: "1px solid rgba(90,174,232,0.25)" }}
-        >
-          <Shield size={14} className="text-[#5aaee8]" />
-        </div>
-        <div>
-          <div style={{ fontSize: "11px", fontWeight: 700, color: "#ddeeff", lineHeight: 1.2 }}>
-            Застрахованная
-          </div>
-          <div style={{ fontSize: "11px", fontWeight: 500, color: "rgba(221,238,255,0.55)" }}>
-            ответственность
-          </div>
+      {/* Z-20: Chips — aligned to content-container right edge */}
+      <div style={{ position: "absolute", inset: 0, zIndex: 20, pointerEvents: "none" }}>
+        <div className="relative mx-auto h-full w-full max-w-7xl px-6">
+
+          {/* "10+ лет" chip — upper reveal zone */}
+          <motion.div
+            initial={reduce ? false : { opacity: 0, y: -16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.25, duration: 0.6, ease: EASE }}
+            className="glass-frost absolute right-0 overflow-hidden px-5 py-4 text-right"
+            style={{ top: "24%", pointerEvents: "auto" }}
+          >
+            <img
+              src="/brand-logo.svg"
+              alt=""
+              aria-hidden
+              className="pointer-events-none absolute -left-2 -top-2 h-14 w-auto opacity-20"
+              style={{ filter: "drop-shadow(0 0 6px rgba(127,197,245,0.3))" }}
+            />
+            <span className="font-display relative block text-xl font-semibold gradient-text">10+ лет</span>
+            <span className="relative text-[12px] text-[var(--ink-muted)]">на высоте</span>
+          </motion.div>
+
+          {/* Rating chip — below trust badges */}
+          <motion.div
+            initial={reduce ? false : { opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.1, duration: 0.6, ease: EASE }}
+            className="glass-frost absolute right-0 flex items-center gap-3 overflow-hidden px-5 py-4"
+            style={{ bottom: "24px", pointerEvents: "auto" }}
+          >
+            <img
+              src="/brand-logo.svg"
+              alt=""
+              aria-hidden
+              className="pointer-events-none absolute -right-2 -bottom-2 h-16 w-auto opacity-20"
+              style={{ filter: "drop-shadow(0 0 8px rgba(127,197,245,0.4))" }}
+            />
+            <span className="relative grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-[rgba(127,197,245,0.12)]">
+              <Star size={17} className="text-[var(--accent-bright)]" fill="currentColor" />
+            </span>
+            <span className="relative leading-tight">
+              <span className="font-display block text-lg font-semibold text-white">4.9 / 5.0</span>
+              <span className="text-[12px] text-[var(--ink-muted)]">оценка заказчиков</span>
+            </span>
+          </motion.div>
+
         </div>
       </div>
 
-      {/* Floating chip — bottom right */}
-      <button
-        onClick={() => goto("#contact")}
-        className="glass-soft absolute -right-6 -bottom-5 flex items-center gap-2 px-5 py-3 t-all hover:border-[rgba(90,174,232,0.35)]"
-        style={{ borderRadius: "1rem" }}
-      >
-        <div
-          className="w-2 h-2 rounded-full"
-          style={{ background: "#5aaee8", boxShadow: "0 0 6px #5aaee8" }}
-        />
-        <span style={{ fontSize: "12px", fontWeight: 600, color: "#ddeeff" }}>
-          Расчет за 30 минут
-        </span>
-      </button>
-    </div>
+    </section>
   );
 }

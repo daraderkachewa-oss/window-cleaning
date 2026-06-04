@@ -1,109 +1,68 @@
 "use client";
+
 import { useState } from "react";
-import { Plus, Minus } from "lucide-react";
-import { useScrollReveal } from "@/hooks/useScrollReveal";
-import { FAQ_ITEMS } from "@/lib/constants";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { Plus } from "lucide-react";
+import { FAQ as FAQ_ITEMS } from "@/lib/constants";
+import SectionHeading from "./SectionHeading";
 
 export default function FAQ() {
-  const [open, setOpen] = useState<number | null>(null);
-  const ref = useScrollReveal<HTMLDivElement>(".reveal-item", { stagger: 0.07 });
+  const [open, setOpen] = useState<number | null>(0);
+  const reduce = useReducedMotion();
+  const dur = reduce ? 0 : 0.35;
 
   return (
-    <section
-      className="relative overflow-hidden"
-      style={{ paddingTop: "100px", paddingBottom: "100px" }}
-    >
-      <div ref={ref} className="max-w-3xl mx-auto px-6 lg:px-10 xl:px-12">
-        <div className="reveal-item section-label mb-6">Частые вопросы</div>
+    <section className="relative px-4 py-20 sm:px-6 md:py-28">
+      <div className="mx-auto max-w-3xl">
+        <SectionHeading
+          eyebrow="FAQ"
+          title={<>Частые <span className="gradient-text">вопросы</span></>}
+          center
+        />
 
-        <div className="reveal-item mb-12">
-          <h2
-            style={{
-              fontSize: "clamp(26px, 3vw, 46px)",
-              fontWeight: 700, letterSpacing: "-0.025em", lineHeight: 1.1,
-              color: "#ddeeff",
-            }}
-          >
-            Вопросы, которые задают{" "}
-            <span className="gradient-text">до подписания договора</span>
-          </h2>
-        </div>
-
-        <div className="space-y-2">
-          {FAQ_ITEMS.map((item, i) => (
-            <div
-              key={i}
-              className="reveal-item glass overflow-hidden t-all"
-              style={{
-                borderColor: open === i
-                  ? "rgba(90,174,232,0.28)"
-                  : "rgba(90,174,232,0.12)",
-              }}
-            >
-              <button
-                onClick={() => setOpen(open === i ? null : i)}
-                className="w-full flex items-start gap-4 text-left"
-                style={{ padding: "20px 24px" }}
+        <motion.div layout className="mt-12 space-y-3">
+          {FAQ_ITEMS.map((item, i) => {
+            const isOpen = open === i;
+            return (
+              <motion.div
+                layout
+                key={item.q}
+                className="overflow-hidden rounded-2xl border border-[#5286AC]/20 bg-[#003556]/40 backdrop-blur-xl"
               >
-                <span
-                  style={{
-                    fontSize: "11px", fontWeight: 800,
-                    color: "#5aaee8", flexShrink: 0, marginTop: "2px",
-                    letterSpacing: "0.06em",
-                  }}
+                <button
+                  onClick={() => setOpen(isOpen ? null : i)}
+                  className="flex w-full items-center justify-between gap-4 px-6 py-5 text-left"
+                  aria-expanded={isOpen}
                 >
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <span
-                  className="flex-1"
-                  style={{
-                    fontSize: "15px", fontWeight: 600,
-                    letterSpacing: "-0.01em", lineHeight: 1.4,
-                    color: "#ddeeff",
-                  }}
-                >
-                  {item.question}
-                </span>
-                <span
-                  className="shrink-0 t-all"
-                  style={{
-                    color: open === i ? "#5aaee8" : "rgba(90,174,232,0.45)",
-                    marginTop: "2px",
-                  }}
-                >
-                  {open === i ? <Minus size={16} /> : <Plus size={16} />}
-                </span>
-              </button>
-
-              <div
-                style={{
-                  maxHeight: open === i ? "400px" : "0",
-                  opacity: open === i ? 1 : 0,
-                  overflow: "hidden",
-                  transition: "max-height 0.35s ease, opacity 0.25s ease",
-                }}
-              >
-                <div style={{ padding: "0 24px 22px 52px" }}>
-                  <p style={{ fontSize: "14px", lineHeight: 1.75, color: "rgba(221,238,255,0.55)" }}>
-                    {item.answer}
-                  </p>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        <div className="reveal-item mt-10 text-center">
-          <p style={{ fontSize: "14px", color: "rgba(221,238,255,0.38)", marginBottom: "14px" }}>
-            Не нашли ответ на свой вопрос?
-          </p>
-          <button
-            onClick={() => document.querySelector("#contact")?.scrollIntoView({ behavior: "smooth" })}
-            className="btn-ghost text-sm"
-          >
-            Задать вопрос напрямую →
-          </button>
-        </div>
+                  <span className="font-display text-[16px] font-medium text-white">{item.q}</span>
+                  <motion.span
+                    animate={{ rotate: isOpen ? 45 : 0 }}
+                    transition={{ duration: dur }}
+                    className="grid h-8 w-8 shrink-0 place-items-center rounded-full border border-[#5286AC]/25 text-[var(--accent-bright)]"
+                  >
+                    <Plus size={16} />
+                  </motion.span>
+                </button>
+                <AnimatePresence initial={false}>
+                  {isOpen && (
+                    <motion.div
+                      key="content"
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: dur, ease: [0.16, 1, 0.3, 1] }}
+                      className="overflow-hidden"
+                    >
+                      <p className="px-6 pb-6 text-[14.5px] leading-relaxed text-[var(--ink-dim)]">
+                        {item.a}
+                      </p>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.div>
+            );
+          })}
+        </motion.div>
       </div>
     </section>
   );

@@ -1,73 +1,32 @@
 "use client";
-import {
-  Building2, ShoppingBag, Briefcase, Car,
-  Hotel, HeartPulse, Home, GraduationCap,
-} from "lucide-react";
-import { useScrollReveal } from "@/hooks/useScrollReveal";
 
-const INDUSTRIES = [
-  { title: "Бизнес-центры",              Icon: Building2      },
-  { title: "Торговые центры",            Icon: ShoppingBag    },
-  { title: "Офисные здания",             Icon: Briefcase      },
-  { title: "Автосалоны",                 Icon: Car            },
-  { title: "Гостиницы",                  Icon: Hotel          },
-  { title: "Медицинские центры",         Icon: HeartPulse     },
-  { title: "Жилые комплексы",            Icon: Home           },
-  { title: "Образовательные учреждения", Icon: GraduationCap  },
-];
+import { Icon } from "./Icon";
+import { INDUSTRIES } from "@/lib/constants";
+import SectionHeading from "./SectionHeading";
+import { Stagger, StaggerItem } from "./motion/Stagger";
 
 export default function Industries() {
-  const ref = useScrollReveal<HTMLDivElement>(".reveal-item", { stagger: 0.07 });
-
   return (
-    <section
-      className="relative overflow-hidden"
-      style={{ paddingTop: "80px", paddingBottom: "80px" }}
-    >
-      <div ref={ref} className="max-w-7xl mx-auto px-6 lg:px-10 xl:px-12">
-        <div className="reveal-item section-label mb-6">Объекты</div>
+    <section className="relative px-4 py-20 sm:px-6 md:py-28">
+      <div className="mx-auto max-w-7xl">
+        <SectionHeading
+          eyebrow="Объекты"
+          title={<>Где мы <span className="gradient-text">работаем</span></>}
+          subtitle="Берём в работу любые типы коммерческой и жилой недвижимости с фасадным остеклением."
+        />
 
-        <div className="reveal-item mb-12">
-          <h2
-            style={{
-              fontSize: "clamp(26px, 3vw, 46px)",
-              fontWeight: 700, letterSpacing: "-0.025em", lineHeight: 1.1,
-              color: "#ddeeff",
-            }}
-          >
-            Работаем с любыми{" "}
-            <span className="gradient-text">типами объектов</span>
-          </h2>
-        </div>
-
-        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
-          {INDUSTRIES.map(({ title, Icon }) => (
-            <div
-              key={title}
-              className="reveal-item glass glow-card flex flex-col items-center gap-3 text-center cursor-default"
-              style={{ padding: "20px 14px 22px" }}
-            >
-              <div
-                className="flex items-center justify-center rounded-xl"
-                style={{
-                  width: 40, height: 40,
-                  background: "rgba(74,143,196,0.12)",
-                  border: "1px solid rgba(90,174,232,0.18)",
-                }}
-              >
-                <Icon size={17} style={{ color: "#5aaee8" }} />
+        <Stagger className="mt-14 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4" stagger={0.06}>
+          {INDUSTRIES.map((it) => (
+            <StaggerItem key={it.title}>
+              <div className="group flex h-full items-center gap-4 rounded-2xl border border-[#5286AC]/20 bg-[#003556]/40 p-4 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-[var(--glass-border-lit)] hover:bg-[#003556]/55">
+                <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl border border-[#5286AC]/25 bg-[rgba(127,197,245,0.08)] text-[var(--accent-bright)] transition-colors group-hover:bg-[rgba(127,197,245,0.16)]">
+                  <Icon name={it.icon} size={20} />
+                </span>
+                <span className="text-[14.5px] font-medium leading-tight text-[var(--ink)]">{it.title}</span>
               </div>
-              <span
-                style={{
-                  fontSize: "11px", fontWeight: 600,
-                  lineHeight: 1.35, color: "rgba(221,238,255,0.70)",
-                }}
-              >
-                {title}
-              </span>
-            </div>
+            </StaggerItem>
           ))}
-        </div>
+        </Stagger>
       </div>
     </section>
   );

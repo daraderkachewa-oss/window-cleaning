@@ -1,131 +1,58 @@
 "use client";
-import { useScrollReveal } from "@/hooks/useScrollReveal";
 
-const CLIENT_NAMES = [
-  "Управляющая компания «Северная Звезда»",
-  "ГК «РосПрофит»",
-  "Сеть клиник «Клариум»",
-  "ТРЦ «Панорама»",
-  "БЦ «Авиа Плаза»",
-  "Facility Group «ПримаФМ»",
-  "УК «Столица Менеджмент»",
-  "Концерн «АвтоПремиум»",
-  "БЦ «Горизонт»",
-  "ТЦ «Галерея»",
-];
+import { CLIENTS } from "@/lib/constants";
+import SectionHeading from "./SectionHeading";
+
+function Mark({ i }: { i: number }) {
+  const shapes = [
+    <path key="a" d="M4 14 12 4l8 10-8 6-8-6Z" stroke="currentColor" strokeWidth="1.4" fill="none" />,
+    <path key="b" d="M12 3 21 8v8l-9 5-9-5V8l9-5Z" stroke="currentColor" strokeWidth="1.4" fill="none" />,
+    <><circle key="c1" cx="12" cy="12" r="8" stroke="currentColor" strokeWidth="1.4" fill="none" /><path key="c2" d="M12 4v16M4 12h16" stroke="currentColor" strokeWidth="1.2" /></>,
+    <rect key="d" x="4" y="4" width="16" height="16" rx="4" stroke="currentColor" strokeWidth="1.4" fill="none" />,
+  ];
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" className="text-[var(--ink-faint)]" aria-hidden>
+      {shapes[i % shapes.length]}
+    </svg>
+  );
+}
+
+function LogoChip({ name, i }: { name: string; i: number }) {
+  return (
+    <div className="mx-2 flex items-center gap-3 whitespace-nowrap rounded-2xl border border-[#5286AC]/15 bg-[#003556]/30 px-6 py-4 backdrop-blur-md">
+      <Mark i={i} />
+      <span className="text-[15px] font-medium tracking-wide text-[var(--ink-muted)]">{name}</span>
+    </div>
+  );
+}
+
+function Row({ reverse }: { reverse?: boolean }) {
+  const list = [...CLIENTS, ...CLIENTS];
+  return (
+    <div className="marquee-mask marquee-paused overflow-hidden">
+      <div className={`marquee-track ${reverse ? "marquee-right" : "marquee-left"}`}>
+        {list.map((name, i) => (
+          <LogoChip key={`${name}-${i}`} name={name} i={i} />
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export default function Clients() {
-  const ref = useScrollReveal<HTMLDivElement>(".reveal-item", { stagger: 0.08 });
-
   return (
-    <section
-      id="clients"
-      className="relative overflow-hidden"
-      style={{ paddingTop: "100px", paddingBottom: "100px" }}
-    >
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{ background: "rgba(13,74,119,0.07)" }}
-      />
-
-      <div ref={ref} className="max-w-7xl mx-auto px-6 lg:px-10 xl:px-12">
-        <div className="reveal-item section-label mb-6">Клиенты</div>
-
-        <div className="reveal-item mb-12 flex flex-col lg:flex-row items-start lg:items-end gap-5">
-          <h2
-            className="flex-1"
-            style={{
-              fontSize: "clamp(26px, 3vw, 46px)",
-              fontWeight: 700, letterSpacing: "-0.025em", lineHeight: 1.1,
-              color: "#ddeeff",
-            }}
-          >
-            Нам доверяют{" "}
-            <span className="gradient-text">ведущие управляющие компании</span>
-          </h2>
-          <p
-            style={{
-              fontSize: "15px", lineHeight: 1.7,
-              color: "rgba(221,238,255,0.48)", maxWidth: "300px",
-            }}
-          >
-            Работаем с управляющими компаниями и собственниками объектов с 2014 года.
-          </p>
-        </div>
-
-        {/* Marquee */}
-        <div className="reveal-item overflow-hidden relative">
-          {/* Fade edges */}
-          <div
-            className="absolute left-0 top-0 bottom-0 z-10 pointer-events-none"
-            style={{
-              width: "120px",
-              background: "linear-gradient(90deg, var(--base), transparent)",
-            }}
-          />
-          <div
-            className="absolute right-0 top-0 bottom-0 z-10 pointer-events-none"
-            style={{
-              width: "120px",
-              background: "linear-gradient(-90deg, var(--base), transparent)",
-            }}
-          />
-
-          <div className="marquee-track">
-            {[...CLIENT_NAMES, ...CLIENT_NAMES].map((name, i) => (
-              <div
-                key={i}
-                className="glass shrink-0 mx-3 flex items-center justify-center"
-                style={{ minWidth: "250px", padding: "16px 28px", borderRadius: "1rem" }}
-              >
-                <span
-                  style={{
-                    fontSize: "13px", fontWeight: 600, textAlign: "center",
-                    color: "rgba(221,238,255,0.62)",
-                  }}
-                >
-                  {name}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Trust strip */}
-        <div
-          className="reveal-item glass mt-10 grid sm:grid-cols-3 gap-px overflow-hidden"
-          style={{ borderRadius: "1.5rem" }}
-        >
-          {[
-            { value: "100%",    label: "юридические лица в клиентах" },
-            { value: "68%",     label: "продлевают договор на 2+ год" },
-            { value: "NPS 94",  label: "индекс лояльности клиентов"  },
-          ].map(({ value, label }) => (
-            <div
-              key={label}
-              className="flex flex-col items-center justify-center gap-1.5 text-center"
-              style={{ padding: "32px 20px" }}
-            >
-              <div
-                style={{
-                  fontSize: "clamp(26px, 3vw, 36px)",
-                  fontWeight: 800, letterSpacing: "-0.03em",
-                  color: "#ddeeff",
-                }}
-              >
-                {value}
-              </div>
-              <div
-                style={{
-                  fontSize: "12px", fontWeight: 500,
-                  color: "rgba(90,174,232,0.65)",
-                }}
-              >
-                {label}
-              </div>
-            </div>
-          ))}
-        </div>
+    <section id="clients" className="relative px-4 py-20 sm:px-6 md:py-28">
+      <div className="mx-auto max-w-7xl">
+        <SectionHeading
+          eyebrow="Клиенты"
+          title={<>Нам доверяют объекты <span className="gradient-text">по всей Москве</span></>}
+          subtitle="Управляющие компании, ритейл, дилерские центры и девелоперы — с многими работаем по нескольку лет."
+          center
+        />
+      </div>
+      <div className="mt-14 space-y-4">
+        <Row />
+        <Row reverse />
       </div>
     </section>
   );

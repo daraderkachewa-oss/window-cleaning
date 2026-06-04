@@ -1,164 +1,133 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
-import Image from "next/image";
-import { gsap } from "gsap";
-import { Menu, X } from "lucide-react";
 
-const NAV_ITEMS = [
-  { label: "Главная",     href: "#hero"     },
-  { label: "Услуги",      href: "#services" },
-  { label: "Наши работы", href: "#cases"    },
-  { label: "Клиенты",     href: "#clients"  },
-  { label: "О компании",  href: "#about"    },
-  { label: "Контакты",    href: "#contact"  },
-];
+import { useEffect, useState } from "react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { Menu, X } from "lucide-react";
+import { NAV } from "@/lib/constants";
+import MagneticButton from "./motion/MagneticButton";
+import Logo from "./Logo";
 
 export default function Header() {
-  const headerRef = useRef<HTMLElement>(null);
   const [scrolled, setScrolled] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [active, setActive] = useState("#hero");
+  const [open, setOpen] = useState(false);
+  const [active, setActive] = useState("#top");
+  const reduce = useReducedMotion();
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   useEffect(() => {
-    const header = headerRef.current;
-    if (!header) return;
-    gsap.fromTo(header,
-      { opacity: 0, y: -16 },
-      { opacity: 1, y: 0, duration: 0.8, ease: "power3.out", delay: 0.2 }
+    const ids = NAV.map((n) => n.href.slice(1));
+    const els = ids.map((id) => document.getElementById(id)).filter(Boolean) as HTMLElement[];
+    const obs = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) setActive(`#${e.target.id}`);
+        });
+      },
+      { rootMargin: "-45% 0px -50% 0px" }
     );
+    els.forEach((el) => obs.observe(el));
+    return () => obs.disconnect();
   }, []);
 
-  const scrollTo = (href: string) => {
-    setMenuOpen(false);
-    setActive(href);
-    document.querySelector(href)?.scrollIntoView({ behavior: "smooth" });
-  };
-
   return (
-    <>
-      <header
-        ref={headerRef}
-        className="fixed top-0 left-0 right-0 z-50 transition-all duration-500"
-        style={{
-          background: scrolled
-            ? "rgba(0,20,38,0.75)"
-            : "transparent",
-          backdropFilter: scrolled ? "blur(28px) saturate(150%)" : "none",
-          WebkitBackdropFilter: scrolled ? "blur(28px) saturate(150%)" : "none",
-          borderBottom: scrolled ? "1px solid rgba(90,174,232,0.10)" : "none",
-          boxShadow: scrolled ? "0 4px 40px rgba(0,30,60,0.5)" : "none",
-        }}
+    <motion.header
+      initial={reduce ? false : { y: -80, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+      className="fixed inset-x-0 top-0 z-50"
+    >
+      <div
+        className={`mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 transition-all duration-500 sm:px-6 ${
+          scrolled ? "py-3" : "py-5"
+        }`}
       >
-        <div className="max-w-7xl mx-auto px-6 lg:px-10 xl:px-12 flex items-center justify-between h-20">
-          {/* Logo */}
-          <button
-            onClick={() => scrollTo("#hero")}
-            className="flex items-center gap-3 group"
-            aria-label="На главную"
-          >
-            <div className="w-9 h-9 relative">
-              <Image src="/logo.svg" alt="Логотип компании" fill className="object-contain" />
-            </div>
-            <span
-              style={{
-                fontSize: "12px", fontWeight: 700,
-                letterSpacing: "0.20em", textTransform: "uppercase",
-                color: "rgba(221,238,255,0.85)",
-                transition: "color 0.2s",
-              }}
-              className="group-hover:!text-[#ddeeff]"
-            >
-              ЯМЩИК
-            </span>
-          </button>
-
-          {/* Desktop nav — pill */}
-          <nav
-            className="hidden lg:flex items-center gap-1 px-2 py-1.5 rounded-full"
-            style={{
-              background: "rgba(0,30,55,0.55)",
-              border: "1px solid rgba(90,174,232,0.10)",
-              backdropFilter: "blur(16px)",
-            }}
-          >
-            {NAV_ITEMS.map((item) => (
-              <button
-                key={item.href}
-                onClick={() => scrollTo(item.href)}
-                className="relative px-4 py-2 rounded-full transition-all duration-200"
-                style={{
-                  fontSize: "13px",
-                  fontWeight: active === item.href ? 600 : 500,
-                  color: active === item.href
-                    ? "#ddeeff"
-                    : "rgba(221,238,255,0.50)",
-                  background: active === item.href
-                    ? "rgba(90,174,232,0.12)"
-                    : "transparent",
-                }}
-              >
-                {item.label}
-              </button>
-            ))}
-          </nav>
-
-          <button
-            onClick={() => scrollTo("#contact")}
-            className="hidden lg:flex btn-primary text-sm"
-            style={{ padding: "11px 24px" }}
-          >
-            Получить расчет
-          </button>
-
-          {/* Mobile */}
-          <button
-            onClick={() => setMenuOpen(!menuOpen)}
-            className="lg:hidden"
-            style={{ color: "#ddeeff", padding: 8 }}
-            aria-label="Меню"
-          >
-            {menuOpen ? <X size={22} /> : <Menu size={22} />}
-          </button>
-        </div>
-      </header>
-
-      {/* Mobile overlay */}
-      {menuOpen && (
         <div
-          className="fixed inset-0 z-40 flex flex-col items-center justify-center gap-7 lg:hidden"
-          style={{
-            background: "rgba(0,20,38,0.96)",
-            backdropFilter: "blur(32px)",
-          }}
+          className={`rounded-full transition-all duration-500 ${
+            scrolled ? "glass-nav px-4 py-2.5" : "px-1"
+          }`}
         >
-          {NAV_ITEMS.map((item) => (
-            <button
-              key={item.href}
-              onClick={() => scrollTo(item.href)}
-              style={{
-                fontSize: "24px", fontWeight: 600,
-                color: "rgba(221,238,255,0.75)",
-                transition: "color 0.2s",
-              }}
-              className="hover:!text-[#ddeeff]"
-            >
-              {item.label}
-            </button>
-          ))}
+          <a href="#top" aria-label="На главную">
+            <Logo height={44} />
+          </a>
+        </div>
+
+        {/* Centered glass pill nav (desktop) */}
+        <nav className="glass-nav hidden items-center gap-1 rounded-full px-2 py-2 lg:flex">
+          {NAV.map((item) => {
+            const isActive = active === item.href;
+            return (
+              <a
+                key={item.href}
+                href={item.href}
+                className={`relative rounded-full px-4 py-2 text-[13.5px] font-medium transition-colors ${
+                  isActive ? "text-white" : "text-[var(--ink-dim)] hover:text-white"
+                }`}
+              >
+                {isActive && (
+                  <motion.span
+                    layoutId="nav-pill"
+                    className="absolute inset-0 -z-10 rounded-full bg-[rgba(127,197,245,0.14)] ring-1 ring-[var(--glass-border-lit)]"
+                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                  />
+                )}
+                {item.label}
+              </a>
+            );
+          })}
+        </nav>
+
+        <div className="flex items-center gap-2">
+          <MagneticButton href="#contacts" className="btn btn-primary hidden md:inline-flex">
+            Получить расчёт
+          </MagneticButton>
           <button
-            onClick={() => scrollTo("#contact")}
-            className="btn-primary mt-4"
+            onClick={() => setOpen((v) => !v)}
+            aria-label="Меню"
+            className="glass-nav grid h-11 w-11 place-items-center rounded-full text-[var(--ink)] lg:hidden"
           >
-            Получить расчет
+            {open ? <X size={20} /> : <Menu size={20} />}
           </button>
         </div>
-      )}
-    </>
+      </div>
+
+      {/* Mobile menu */}
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ opacity: 0, y: -12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -12 }}
+            transition={{ duration: 0.3 }}
+            className="mx-4 lg:hidden"
+          >
+            <div className="glass mt-1 rounded-3xl p-3">
+              {NAV.map((item) => (
+                <a
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setOpen(false)}
+                  className="block rounded-2xl px-4 py-3 text-[15px] text-[var(--ink-dim)] transition-colors hover:bg-[rgba(127,197,245,0.1)] hover:text-white"
+                >
+                  {item.label}
+                </a>
+              ))}
+              <a
+                href="#contacts"
+                onClick={() => setOpen(false)}
+                className="btn btn-primary mt-2 w-full"
+              >
+                Получить расчёт
+              </a>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.header>
   );
 }

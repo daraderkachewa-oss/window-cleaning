@@ -1,57 +1,81 @@
-import type { Metadata } from "next";
-import { Montserrat } from "next/font/google";
+import type { Metadata, Viewport } from "next";
+import { Geologica } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
+import Atmosphere from "@/components/Atmosphere";
 
-const montserrat = Montserrat({
+const geologica = Geologica({
   subsets: ["latin", "cyrillic"],
-  weight: ["400", "500", "600", "700", "800"],
-  variable: "--font-montserrat",
+  variable: "--font-geologica",
   display: "swap",
 });
 
+const tildaSans = localFont({
+  variable: "--font-tilda",
+  display: "swap",
+  src: [
+    { path: "./fonts/TildaSans-Regular.woff2", weight: "400", style: "normal" },
+    { path: "./fonts/TildaSans-Medium.woff2", weight: "500", style: "normal" },
+    { path: "./fonts/TildaSans-Semibold.woff2", weight: "600", style: "normal" },
+  ],
+});
+
 export const metadata: Metadata = {
-  title: "Мойка фасадного остекления в Москве | ИП Ямщикова",
+  metadataBase: new URL("https://yamshik.ru"),
+  title: "Профильная мойка остекления фасадов в Москве и МО | ИП Ямщикова",
   description:
-    "Профессиональная мойка стеклянных фасадов коммерческой недвижимости в Москве и МО. Работаем по договору с юридическими лицами. Фотоотчет, полный пакет документов. Бесплатный расчет за 30 минут.",
-  keywords:
-    "мойка фасадов, мойка остекления, мойка витражей, мойка бизнес-центра, промышленная мойка стекол, мойка фасадов Москва",
+    "Профессиональная мойка остекления фасадов коммерческой недвижимости в Москве и Московской области. Работа без остановки объекта, договор с юрлицами, фотоотчёт, полный пакет документов. Расчёт по объекту.",
+  keywords: [
+    "мойка остекления фасадов",
+    "мойка стеклянных фасадов",
+    "мойка витражей",
+    "промышленный альпинизм мойка",
+    "мойка фасадов Москва",
+    "клининг бизнес-центров",
+  ],
+  authors: [{ name: "ИП Ямщикова Анна Александровна" }],
   openGraph: {
-    title: "Мойка фасадного остекления в Москве | ИП Ямщикова",
+    title: "Профильная мойка остекления фасадов в Москве и МО",
     description:
-      "Профессиональная мойка стеклянных фасадов коммерческой недвижимости. 10+ лет, 500+ объектов, 2 млн м² выполнено.",
+      "Безупречная мойка остекления фасадов без остановки работы объекта. 10+ лет, 500+ объектов, 2 млн м².",
     type: "website",
     locale: "ru_RU",
+    siteName: "ИП Ямщикова — мойка фасадного остекления",
   },
   robots: { index: true, follow: true },
 };
 
+export const viewport: Viewport = {
+  themeColor: "#0a1a2f",
+  width: "device-width",
+  initialScale: 1,
+};
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  name: "ИП Ямщикова Анна Александровна",
+  description:
+    "Профессиональная мойка остекления фасадов коммерческой недвижимости в Москве и Московской области.",
+  telephone: "+79164731640",
+  email: "ip-yamsh@mail.ru",
+  address: { "@type": "PostalAddress", addressLocality: "Москва", addressCountry: "RU" },
+  areaServed: ["Москва", "Московская область"],
+  priceRange: "$$",
+};
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ru" className={montserrat.variable}>
-      <head>
+    <html lang="ru" className={`${geologica.variable} ${tildaSans.variable}`}>
+      <body>
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "LocalBusiness",
-              name: "ИП Ямщикова Анна Александровна",
-              description: "Профессиональная мойка фасадного остекления коммерческой недвижимости",
-              telephone: "+79164731640",
-              email: "ip-yamsh@mail.ru",
-              address: {
-                "@type": "PostalAddress",
-                addressLocality: "Москва",
-                addressCountry: "RU",
-              },
-              areaServed: ["Москва", "Московская область"],
-              priceRange: "$$",
-            }),
-          }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-      </head>
-      <body className="font-[family-name:var(--font-montserrat)] antialiased">
+        <div className="page-atmosphere" aria-hidden />
+        <Atmosphere />
         {children}
+        <div className="grain" aria-hidden />
       </body>
     </html>
   );
