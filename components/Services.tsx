@@ -30,13 +30,14 @@ export default function Services() {
                 <div
                   onMouseEnter={() => setActive(i)}
                   onMouseLeave={() => setActive(null)}
-                  className="group cursor-default py-6 transition-colors duration-200"
+                  onClick={() => setActive(active === i ? null : i)}
+                  className="group cursor-pointer py-6 transition-colors duration-200"
                 >
                   <div className="flex items-center gap-6">
                     <span className="font-display w-10 shrink-0 text-sm font-semibold text-[var(--accent-bright)] opacity-70 group-hover:opacity-100 transition-opacity">
                       {String(i + 1).padStart(2, "0")}
                     </span>
-                    <h3 className="flex-1 font-display text-[clamp(1.2rem,2.4vw,1.8rem)] font-semibold text-white/80 transition-colors duration-200 group-hover:text-white">
+                    <h3 className="flex-1 font-display text-[clamp(1rem,2.4vw,1.8rem)] font-semibold text-white/80 transition-colors duration-200 group-hover:text-white">
                       {s.title}
                     </h3>
                     <span className="shrink-0 text-white/20 transition-all duration-200 group-hover:text-[var(--accent-bright)] group-hover:rotate-12">

@@ -286,6 +286,16 @@ body {
   transition: box-shadow 0.35s ease, border-color 0.35s ease, color 0.3s ease, background 0.35s ease;
 }
 
+/* Compact variant — header lockup. Declared after .btn so it wins on equal specificity. */
+.btn-compact {
+  gap: 7px;
+  font-size: 13px;
+  padding: 9px 18px;
+}
+@media (min-width: 640px) {
+  .btn-compact { font-size: 13.5px; padding: 10px 20px; }
+}
+
 /* Deep navy primary */
 .btn-primary {
   color: #ffffff;

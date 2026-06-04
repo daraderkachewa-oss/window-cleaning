@@ -93,7 +93,7 @@ export default function Hero() {
 
             <motion.h1
               variants={reduce ? undefined : item}
-              className="display-xl mt-3 max-w-[720px] text-[clamp(2.2rem,3.8vw,3.8rem)]"
+              className="display-xl mt-3 max-w-[720px] text-[clamp(1.75rem,3.8vw,3.8rem)]"
               style={{ lineHeight: 1.08 }}
             >
               Мойка{" "}
@@ -124,7 +124,7 @@ export default function Hero() {
               <div className="liquid-glass flex items-center gap-2 rounded-full p-1.5">
                 <a
                   href="#services"
-                  className="relative z-10 rounded-full px-5 py-3 text-[15px] font-medium text-[var(--ink-dim)] transition-colors hover:text-white"
+                  className="relative z-10 rounded-full px-3 py-2.5 text-[14px] font-medium text-[var(--ink-dim)] transition-colors hover:text-white sm:px-5 sm:py-3 sm:text-[15px]"
                 >
                   Наши услуги
                 </a>
@@ -151,8 +151,8 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* Z-20: Chips — aligned to content-container right edge */}
-      <div style={{ position: "absolute", inset: 0, zIndex: 20, pointerEvents: "none" }}>
+      {/* Z-20: Chips — desktop only, hidden on mobile to avoid overlapping content */}
+      <div className="hidden lg:block" style={{ position: "absolute", inset: 0, zIndex: 20, pointerEvents: "none" }}>
         <div className="relative mx-auto h-full w-full max-w-7xl px-6">
 
           {/* "10+ лет" chip — upper reveal zone */}
@@ -160,7 +160,7 @@ export default function Hero() {
             initial={reduce ? false : { opacity: 0, y: -16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.25, duration: 0.6, ease: EASE }}
-            className="glass-frost absolute right-0 overflow-hidden px-5 py-4 text-right"
+            className="glass-frost absolute right-6 overflow-hidden px-5 py-4 text-right"
             style={{ top: "24%", pointerEvents: "auto" }}
           >
             <img
@@ -179,7 +179,7 @@ export default function Hero() {
             initial={reduce ? false : { opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.1, duration: 0.6, ease: EASE }}
-            className="glass-frost absolute right-0 flex items-center gap-3 overflow-hidden px-5 py-4"
+            className="glass-frost absolute right-6 flex items-center gap-3 overflow-hidden px-5 py-4"
             style={{ bottom: "24px", pointerEvents: "auto" }}
           >
             <img

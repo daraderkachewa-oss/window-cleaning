@@ -49,11 +49,11 @@ export default function Header() {
       >
         <div
           className={`rounded-full transition-all duration-500 ${
-            scrolled ? "glass-nav px-4 py-2.5" : "px-1"
+            scrolled ? "glass-nav px-4 py-2.5" : ""
           }`}
         >
-          <a href="#top" aria-label="На главную">
-            <Logo height={44} />
+          <a href="#top" aria-label="На главную" className="block">
+            <Logo height={44} responsive />
           </a>
         </div>
 
@@ -82,18 +82,16 @@ export default function Header() {
           })}
         </nav>
 
-        <div className="flex items-center gap-2">
-          <MagneticButton href="#contacts" className="btn btn-primary hidden md:inline-flex">
-            Получить расчёт
-          </MagneticButton>
-          <button
-            onClick={() => setOpen((v) => !v)}
-            aria-label="Меню"
-            className="glass-nav grid h-11 w-11 place-items-center rounded-full text-[var(--ink)] lg:hidden"
-          >
-            {open ? <X size={20} /> : <Menu size={20} />}
-          </button>
-        </div>
+        <MagneticButton href="#contacts" className="btn btn-primary btn-compact hidden md:inline-flex">
+          Получить расчёт
+        </MagneticButton>
+        <button
+          onClick={() => setOpen((v) => !v)}
+          aria-label="Меню"
+          className="glass-nav grid h-10 w-10 shrink-0 place-items-center rounded-full text-[var(--ink)] sm:h-11 sm:w-11 lg:hidden"
+        >
+          {open ? <X size={20} /> : <Menu size={20} />}
+        </button>
       </div>
 
       {/* Mobile menu */}
@@ -106,13 +104,13 @@ export default function Header() {
             transition={{ duration: 0.3 }}
             className="mx-4 lg:hidden"
           >
-            <div className="glass mt-1 rounded-3xl p-3">
+            <div className="mt-1 rounded-3xl border border-[#5286AC]/30 bg-[#030d1f]/96 p-3 shadow-[0_24px_80px_rgba(0,0,0,0.8)] backdrop-blur-2xl">
               {NAV.map((item) => (
                 <a
                   key={item.href}
                   href={item.href}
                   onClick={() => setOpen(false)}
-                  className="block rounded-2xl px-4 py-3 text-[15px] text-[var(--ink-dim)] transition-colors hover:bg-[rgba(127,197,245,0.1)] hover:text-white"
+                  className="block rounded-2xl px-4 py-3.5 text-[16px] font-medium text-white/80 transition-colors hover:bg-[rgba(127,197,245,0.1)] hover:text-white"
                 >
                   {item.label}
                 </a>

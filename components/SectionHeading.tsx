@@ -17,7 +17,7 @@ export default function SectionHeading({
         <span className={`eyebrow ${center ? "center" : ""}`}>{eyebrow}</span>
       </Reveal>
       <Reveal delay={0.06}>
-        <h2 className="display-xl mt-5 text-[clamp(1.9rem,4vw,3.1rem)]">{title}</h2>
+        <h2 className="display-xl mt-5 text-[clamp(1.55rem,4vw,3.1rem)]">{title}</h2>
       </Reveal>
       {subtitle && (
         <Reveal delay={0.12}>

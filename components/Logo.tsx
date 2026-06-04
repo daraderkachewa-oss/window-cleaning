@@ -4,20 +4,28 @@
 export default function Logo({
   height = 46,
   className = "",
+  responsive = false,
 }: {
   height?: number;
   className?: string;
+  /* When true, the lockup shrinks on small screens so its layout box
+     genuinely shrinks (needed for even flex spacing in the header). */
+  responsive?: boolean;
 }) {
   return (
-    <span className={`flex items-center gap-3 ${className}`}>
+    <span className={`flex items-center ${responsive ? "gap-1.5 sm:gap-3" : "gap-3"} ${className}`}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src="/brand-logo.svg"
         alt="Логотип компании по мойке остекления фасадов"
-        style={{ height, width: "auto" }}
-        className="shrink-0 select-none"
+        style={responsive ? undefined : { height, width: "auto" }}
+        className={`w-auto shrink-0 select-none ${responsive ? "h-8 sm:h-11" : ""}`}
       />
-      <span className="font-display text-[11.5px] font-semibold leading-[1.22] tracking-[0.04em] text-[var(--ink)]">
+      <span
+        className={`font-display font-semibold tracking-[0.04em] text-[var(--ink)] ${
+          responsive ? "text-[9px] leading-[1.2] sm:text-[11.5px]" : "text-[11.5px] leading-[1.22]"
+        }`}
+      >
         мойка
         <br />
         остекления

@@ -39,7 +39,7 @@ function CaseTitle({ name }: { name: string }) {
         WebkitTextFillColor: "transparent",
         backgroundClip: "text",
       }}
-      className="font-display font-bold leading-[0.95] tracking-[-0.04em] text-[clamp(3rem,8vw,8.5rem)]"
+      className="font-display font-bold leading-[0.95] tracking-[-0.04em] text-[clamp(2rem,8vw,8.5rem)]"
     >
       {name}
     </motion.h2>

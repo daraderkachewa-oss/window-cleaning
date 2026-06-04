@@ -98,7 +98,7 @@ export default function Industries() {
                 <span className="w-10 shrink-0 font-display text-[clamp(0.9rem,1.4vw,1.1rem)] font-medium text-white/30 transition-colors duration-200 group-hover:text-white/60">
                   {String(i + 1).padStart(2, "0")}
                 </span>
-                <span className="flex-1 font-display text-[clamp(1.35rem,3vw,2.4rem)] font-semibold text-white transition-colors duration-200 group-hover:text-[var(--accent-bright)]">
+                <span className="flex-1 font-display text-[clamp(1.05rem,3vw,2.4rem)] font-semibold text-white transition-colors duration-200 group-hover:text-[var(--accent-bright)]">
                   {it.title}
                 </span>
                 <span className="shrink-0 text-white/20 transition-colors duration-200 group-hover:text-[var(--accent-bright)]">
