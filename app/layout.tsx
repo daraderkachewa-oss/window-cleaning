@@ -34,6 +34,16 @@ export const metadata: Metadata = {
     "клининг бизнес-центров",
   ],
   authors: [{ name: "ИП Ямщикова Анна Александровна" }],
+  icons: {
+    // SVG — crisp logo in modern browser tabs (Chrome, Safari, Firefox, Edge).
+    // The .ico fallback for older browsers and search crawlers (Google, Яндекс)
+    // is emitted automatically from app/favicon.ico.
+    icon: { url: "/logo.svg", type: "image/svg+xml" },
+    // Legacy "shortcut icon" rel for older crawlers / Яндекс.
+    shortcut: "/favicon.ico",
+    // Home-screen icon on iOS / iPadOS.
+    apple: { url: "/logo.svg", type: "image/svg+xml" },
+  },
   openGraph: {
     title: "Профильная мойка остекления фасадов в Москве и МО",
     description:
