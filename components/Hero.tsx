@@ -79,7 +79,7 @@ export default function Hero() {
 
       {/* Z-10: Content — anchored to bottom of viewport */}
       <div className="relative flex flex-1 items-end" style={{ zIndex: 10 }}>
-        <div className="mx-auto w-full max-w-7xl grid grid-cols-1 items-start gap-12 px-6 pb-20 pt-40 lg:grid-cols-[1.3fr_0.7fr] lg:gap-20">
+        <div className="mx-auto w-full max-w-7xl grid grid-cols-1 items-start gap-12 px-6 pb-20 pt-40 lg:grid-cols-[1.35fr_0.65fr] lg:gap-16">
 
           {/* LEFT — heading monument */}
           <motion.div
@@ -93,7 +93,7 @@ export default function Hero() {
 
             <motion.h1
               variants={reduce ? undefined : item}
-              className="display-xl mt-3 max-w-[720px] text-[clamp(1.75rem,3.8vw,3.8rem)]"
+              className="display-xl mt-3 max-w-[720px] text-[clamp(1.75rem,4.8vw,4.25rem)] lg:max-w-none"
               style={{ lineHeight: 1.08 }}
             >
               Мойка{" "}
