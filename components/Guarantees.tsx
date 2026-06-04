@@ -1,9 +1,7 @@
 "use client";
 
-import { Icon } from "./Icon";
 import { GUARANTEES } from "@/lib/constants";
 import SectionHeading from "./SectionHeading";
-import GlowCard from "./motion/GlowCard";
 import { Stagger, StaggerItem } from "./motion/Stagger";
 
 export default function Guarantees() {
@@ -16,16 +14,24 @@ export default function Guarantees() {
           subtitle="Каждое обязательство закреплено документально — не на словах, а в условиях контракта."
         />
 
-        <Stagger className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5" stagger={0.08}>
-          {GUARANTEES.map((g) => (
+        {/* Typographic numbered list — Swiss grid style */}
+        <Stagger className="mt-14 divide-y divide-white/[0.07]" stagger={0.08}>
+          {GUARANTEES.map((g, i) => (
             <StaggerItem key={g.title}>
-              <GlowCard className="flex h-full flex-col rounded-3xl border border-[#5286AC]/20 bg-[#003556]/40 p-6 backdrop-blur-xl">
-                <span className="mb-5 grid h-12 w-12 place-items-center rounded-2xl border border-[#5286AC]/25 bg-[rgba(127,197,245,0.1)] text-[var(--accent-bright)]">
-                  <Icon name={g.icon} size={22} />
+              <div className="grid grid-cols-[3.5rem_1fr] gap-6 py-8 items-start lg:grid-cols-[5rem_1fr_1.4fr]">
+                {/* Large dim index */}
+                <span className="font-display text-[2.8rem] font-bold leading-none text-white/10 lg:text-[3.5rem]">
+                  {String(i + 1).padStart(2, "0")}
                 </span>
-                <h3 className="font-display text-[16px] font-semibold leading-snug text-white">{g.title}</h3>
-                <p className="mt-3 text-[13.5px] leading-relaxed text-[var(--ink-dim)]">{g.text}</p>
-              </GlowCard>
+                {/* Title */}
+                <h3 className="font-display text-[1.15rem] font-semibold text-white pt-1 lg:text-xl">
+                  {g.title}
+                </h3>
+                {/* Description — hidden on mobile grid, shown below on sm */}
+                <p className="col-span-full lg:col-span-1 text-base leading-relaxed text-white/70 lg:pt-1 pl-[3.5rem] lg:pl-0">
+                  {g.text}
+                </p>
+              </div>
             </StaggerItem>
           ))}
         </Stagger>

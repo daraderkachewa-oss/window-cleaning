@@ -20,29 +20,28 @@ export default function FAQ() {
           center
         />
 
-        <motion.div layout className="mt-12 space-y-3">
+        <motion.div layout className="mt-14 divide-y divide-white/[0.07]">
           {FAQ_ITEMS.map((item, i) => {
             const isOpen = open === i;
             return (
-              <motion.div
-                layout
-                key={item.q}
-                className="overflow-hidden rounded-2xl border border-[#5286AC]/20 bg-[#003556]/40 backdrop-blur-xl"
-              >
+              <motion.div layout key={item.q}>
                 <button
                   onClick={() => setOpen(isOpen ? null : i)}
-                  className="flex w-full items-center justify-between gap-4 px-6 py-5 text-left"
+                  className="flex w-full items-center justify-between gap-6 py-6 text-left group"
                   aria-expanded={isOpen}
                 >
-                  <span className="font-display text-[16px] font-medium text-white">{item.q}</span>
+                  <span className="font-display text-[17px] font-medium text-white/80 transition-colors duration-200 group-hover:text-white md:text-lg">
+                    {item.q}
+                  </span>
                   <motion.span
                     animate={{ rotate: isOpen ? 45 : 0 }}
                     transition={{ duration: dur }}
-                    className="grid h-8 w-8 shrink-0 place-items-center rounded-full border border-[#5286AC]/25 text-[var(--accent-bright)]"
+                    className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-white/15 text-[var(--accent-bright)] transition-colors group-hover:border-[var(--glass-border-lit)]"
                   >
-                    <Plus size={16} />
+                    <Plus size={18} />
                   </motion.span>
                 </button>
+
                 <AnimatePresence initial={false}>
                   {isOpen && (
                     <motion.div
@@ -53,7 +52,7 @@ export default function FAQ() {
                       transition={{ duration: dur, ease: [0.16, 1, 0.3, 1] }}
                       className="overflow-hidden"
                     >
-                      <p className="px-6 pb-6 text-[14.5px] leading-relaxed text-[var(--ink-dim)]">
+                      <p className="pb-7 text-base leading-relaxed text-white/70">
                         {item.a}
                       </p>
                     </motion.div>

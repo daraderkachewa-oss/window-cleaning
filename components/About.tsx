@@ -9,7 +9,7 @@ export default function About() {
   return (
     <section id="about" className="relative px-4 py-20 sm:px-6 md:py-28">
       <div className="mx-auto max-w-7xl">
-        <div className="grid items-end gap-10 lg:grid-cols-2">
+        <div className="grid items-start gap-10 lg:grid-cols-2">
           <div className="max-w-xl">
             <Reveal>
               <span className="eyebrow">О компании</span>
@@ -22,7 +22,7 @@ export default function About() {
             </Reveal>
           </div>
           <Reveal delay={0.1}>
-            <p className="text-[15px] leading-relaxed text-[var(--ink-dim)] md:text-base">
+            <p className="text-base leading-relaxed text-white/75 md:text-[17px]">
               Мы — специализированный подрядчик по мойке фасадного остекления коммерческой
               недвижимости. Работаем только с юридическими лицами по договору, используем собственный
               парк оборудования и закрываем объект полным пакетом документов. За годы работы вымыты
