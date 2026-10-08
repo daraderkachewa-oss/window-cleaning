@@ -7,6 +7,12 @@
       "runtimeArgs": ["run", "dev"],
       "port": 3000,
       "autoPort": true
+    },
+    {
+      "name": "poster",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["-m", "http.server", "4444"],
+      "port": 4444
     }
   ]
 }
