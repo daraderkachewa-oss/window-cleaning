@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Window Cleaning — Creative Poster A3</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Jost:wght@200;300;400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: #c8d8e8;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 24px;
+}
+
+#wrap {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+/* ── A3 Poster 297 × 420 mm ─────────────────────── */
+.poster {
+  width: 297mm;
+  height: 420mm;
+  position: relative;
+  overflow: hidden;
+  font-family: 'Jost', sans-serif;
+  transform-origin: top center;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* Pearl-glass gradient background */
+  background:
+    radial-gradient(ellipse 80% 60% at 70% 20%, #cee8f8 0%, transparent 65%),
+    radial-gradient(ellipse 60% 50% at 20% 80%, #d4eaf8 0%, transparent 60%),
+    linear-gradient(165deg, #e8f4fd 0%, #f5fafe 45%, #edf5fc 100%);
+}
+
+/* ── Background glass streaks ──────────────────── */
+.glass-bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.glass-bg svg { width: 100%; height: 100%; }
+
+/* ── Top section ────────────────────────────────── */
+.top-section {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 18mm;
+  padding-bottom: 10mm;
+  text-align: center;
+  opacity: 0;
+  animation: fadeUp 1s 0.1s cubic-bezier(0.22,1,0.36,1) forwards;
+}
+
+.company-tag {
+  font-family: 'Jost', sans-serif;
+  font-weight: 300;
+  font-size: 3mm;
+  letter-spacing: 4mm;
+  text-transform: uppercase;
+  color: #4a7ba7;
+  margin-bottom: 6mm;
+}
+
+.rule {
+  width: 12mm;
+  height: 0.3mm;
+  background: linear-gradient(90deg, transparent, #4a7ba7, transparent);
+  margin-bottom: 8mm;
+}
+
+.headline {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 300;
+  font-size: 18mm;
+  line-height: 1.0;
+  color: #0a1f3d;
+  letter-spacing: -0.3mm;
+}
+
+.headline em {
+  font-style: italic;
+  color: #1b5c96;
+}
+
+/* ── QR container ───────────────────────────────── */
+.qr-section {
+  position: relative;
+  z-index: 10;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8mm;
+  opacity: 0;
+  animation: scaleUp 1.1s 0.4s cubic-bezier(0.22,1,0.36,1) forwards;
+}
+
+.qr-outer {
+  position: relative;
+  width: 192mm;
+  height: 192mm;
+}
+
+/* Thin corner registration marks */
+.corner {
+  position: absolute;
+  width: 7mm;
+  height: 7mm;
+  border-color: rgba(26,92,150,0.45);
+  border-style: solid;
+  z-index: 2;
+}
+.corner.tl { top: -3.5mm;    left: -3.5mm;   border-width: 0.5mm 0 0 0.5mm; }
+.corner.tr { top: -3.5mm;    right: -3.5mm;  border-width: 0.5mm 0.5mm 0 0; }
+.corner.bl { bottom: -3.5mm; left: -3.5mm;   border-width: 0 0 0.5mm 0.5mm; }
+.corner.br { bottom: -3.5mm; right: -3.5mm;  border-width: 0 0.5mm 0.5mm 0; }
+
+#creative-qr {
+  width: 100%;
+  height: 100%;
+  /* Subtle drop shadow to lift QR off background */
+  filter: drop-shadow(0 4mm 18mm rgba(10,31,61,0.12));
+}
+
+#creative-qr svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* ── Bottom section ─────────────────────────────── */
+.bottom-section {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4mm;
+  padding-bottom: 14mm;
+  opacity: 0;
+  animation: fadeUp 1s 0.7s cubic-bezier(0.22,1,0.36,1) forwards;
+}
+
+.url-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 2.5mm;
+  border: 0.35mm solid rgba(26,92,150,0.28);
+  padding: 3mm 8mm;
+  background: rgba(255,255,255,0.6);
+}
+
+.url-dot {
+  width: 1.5mm;
+  height: 1.5mm;
+  border-radius: 50%;
+  background: #1b6ca8;
+  flex-shrink: 0;
+}
+
+.url-label {
+  font-family: 'Jost', sans-serif;
+  font-weight: 200;
+  font-size: 4mm;
+  letter-spacing: 1.8mm;
+  color: #1b6ca8;
+}
+
+.tagline {
+  font-family: 'Jost', sans-serif;
+  font-weight: 200;
+  font-size: 3mm;
+  letter-spacing: 1.5mm;
+  text-transform: uppercase;
+  color: rgba(74,123,167,0.65);
+}
+
+/* ── Animations ─────────────────────────────────── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(5mm); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes scaleUp {
+  from { opacity: 0; transform: scale(0.96); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* ── Print ──────────────────────────────────────── */
+@media print {
+  @page { size: A3 portrait; margin: 0; }
+  body  { background: none; padding: 0; display: block; }
+  #wrap { display: block; }
+  .poster {
+    transform: none !important;
+    width: 297mm !important;
+    height: 420mm !important;
+  }
+  .top-section, .qr-section, .bottom-section {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+</style>
+</head>
+<body>
+
+<div id="wrap">
+<div class="poster" id="poster">
+
+  <!-- ── Light glass-reflection streaks ── -->
+  <div class="glass-bg">
+    <svg viewBox="0 0 297 420" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+      <!-- Diagonal light streaks suggesting glass -->
+      <line x1="340" y1="-10" x2="-10" y2="360" stroke="white" stroke-width="18" opacity="0.25"/>
+      <line x1="360" y1="-10" x2="10"  y2="360" stroke="white" stroke-width="6"  opacity="0.15"/>
+      <line x1="310" y1="-10" x2="-40" y2="340" stroke="white" stroke-width="4"  opacity="0.12"/>
+      <line x1="-10" y1="60"  x2="310" y2="430" stroke="white" stroke-width="10" opacity="0.18"/>
+      <line x1="-10" y1="40"  x2="290" y2="420" stroke="white" stroke-width="3"  opacity="0.10"/>
+      <!-- Horizontal water smear -->
+      <line x1="0" y1="310" x2="297" y2="318" stroke="white" stroke-width="5" opacity="0.12"/>
+    </svg>
+  </div>
+
+  <!-- ── Headline ── -->
+  <div class="top-section">
+    <span class="company-tag">Window Cleaning</span>
+    <div class="rule"></div>
+    <h1 class="headline">Сквозь призму<br><em>чистоты</em></h1>
+  </div>
+
+  <!-- ── Creative QR ── -->
+  <div class="qr-section">
+    <div class="qr-outer">
+      <div class="corner tl"></div>
+      <div class="corner tr"></div>
+      <div class="corner bl"></div>
+      <div class="corner br"></div>
+      <div id="creative-qr"></div>
+    </div>
+  </div>
+
+  <!-- ── URL + tagline ── -->
+  <div class="bottom-section">
+    <div class="url-pill">
+      <div class="url-dot"></div>
+      <span class="url-label">window-cleaning.ru</span>
+    </div>
+    <span class="tagline">Профессиональная мойка фасадов и окон</span>
+  </div>
+
+</div>
+</div>
+
+<script>
+// ─── QR module matrix (33×33, H error correction, window-cleaning.ru) ───────
+const ROWS = [
+  "111111100101101001010010101111111",
+  "100000101000001011110010001000001",
+  "101110101100101110010100101011101",
+  "101110101100110011100111101011101",
+  "101110101111011100101011101011101",
+  "100000101100100111110110101000001",
+  "111111101010101010101010101111111",
+  "000000000001111000111000000000000",
+  "001001111000010011010001110111110",
+  "001001000001011000110111011101001",
+  "101111100101110101010001001110101",
+  "000001010110000110000101100101011",
+  "111111100010001011101101101111001",
+  "000000010000101011111101001111101",
+  "010101101111000011011001010101001",
+  "000001000010111000011011110111101",
+  "101011111111100000101011001101110",
+  "011101001010010110111001001100100",
+  "011001111000011010001011011101111",
+  "000001001100000010101011010111010",
+  "100110110010010001011001111100001",
+  "000101010010001010001000110100101",
+  "110101100111100111010010111100101",
+  "001010010110011110000001100111000",
+  "111000110001100100111000111111000",
+  "000000001011111000011010100010011",
+  "111111101001010111000110101010101",
+  "100000101010011100001011100011011",
+  "101110100101010001101111111111000",
+  "101110100010000001111110110110010",
+  "101110101011011111111000000010111",
+  "100000100010011111111101111000000",
+  "111111100100101111011100100010101"
+];
+
+const SIZE   = 33;
+const MARGIN = 2;
+const TOTAL  = SIZE + MARGIN * 2; // 37
+
+// Parse into 2D boolean array
+const M = ROWS.map(r => r.split('').map(c => c === '1'));
+
+// ─── Finder pattern check (0-indexed module coords) ──────────────────────────
+function isFinder(r, c) {
+  return (r < 7 && c < 7) || (r < 7 && c >= 26) || (r >= 26 && c < 7);
+}
+
+// ─── Timing pattern ──────────────────────────────────────────────────────────
+function isTiming(r, c) {
+  return (r === 6 && c >= 8 && c <= 24) || (c === 6 && r >= 8 && r <= 24);
+}
+
+// ─── Separator (1-module white border around each finder) ───────────────────
+function isSeparator(r, c) {
+  // right of top-left finder (col 7, row 0-7)
+  if (c === 7 && r <= 7) return true;
+  // below top-left finder (row 7, col 0-7)
+  if (r === 7 && c <= 7) return true;
+  // left of top-right finder (col 25, row 0-7)
+  if (c === 25 && r <= 7) return true;
+  // below top-right finder (row 7, col 25-32)
+  if (r === 7 && c >= 25) return true;
+  // right of bottom-left finder (col 7, row 25-32)
+  if (c === 7 && r >= 25) return true;
+  // above bottom-left finder (row 25, col 0-7)
+  if (r === 25 && c <= 7) return true;
+  return false;
+}
+
+// ─── Shape renderers (SVG string, 1×1 unit cell) ─────────────────────────────
+
+// Variety seed (deterministic)
+function v(r, c) { return (r * 11 + c * 7 + (r ^ c)) % 4; }
+
+// Zone colors
+const C_DROP_A  = '#1A69A8'; // azure blue  – drop zone
+const C_DROP_B  = '#2685C7'; // lighter azure
+const C_SQUEEGEE = '#0A2540'; // deep navy   – squeegee zone
+const C_SQUEEGEE_ACCENT = '#1E5F9A';
+const C_BLDG_A  = '#0C2D52'; // slate navy  – building zone
+const C_BLDG_B  = '#0F3A68';
+const C_BLDG_LINE = '#5AADCE'; // glass line colour
+
+// ── Water drop (teardrop, tip pointing down) ─────────────────────────────────
+function drop(svgX, svgY, variety) {
+  const cx = svgX + 0.5;
+  const color = (variety < 2) ? C_DROP_A : C_DROP_B;
+  const ry   = (variety === 1 || variety === 3) ? 0.29 : 0.31;
+  const tipY = svgY + 0.90;
+  const topY = svgY + 0.08 + (variety % 2) * 0.04;
+  return (
+    // rounded top half (ellipse)
+    `<ellipse cx="${cx}" cy="${svgY + 0.40}" rx="0.35" ry="${ry}" fill="${color}"/>` +
+    // pointed lower tail (triangle)
+    `<polygon points="${cx - 0.28},${svgY + 0.54} ${cx},${tipY} ${cx + 0.28},${svgY + 0.54}" fill="${color}"/>` +
+    // tiny specular highlight
+    `<ellipse cx="${cx - 0.1}" cy="${svgY + 0.22}" rx="0.07" ry="0.10" fill="rgba(255,255,255,0.45)" transform="rotate(-20,${cx - 0.1},${svgY + 0.22})"/>`
+  );
+}
+
+// ── Squeegee stroke (flat horizontal bar) ───────────────────────────────────
+function squeegee(svgX, svgY, variety) {
+  const h   = 0.54 + variety * 0.025; // slight height variation
+  const yOff = (1 - h) / 2;
+  const cx  = svgX + 0.5;
+  return (
+    // main rubber blade body
+    `<rect x="${svgX + 0.06}" y="${svgY + yOff}" width="0.88" height="${h}" rx="0.11" fill="${C_SQUEEGEE}"/>` +
+    // top leading-edge highlight (the squeegee rubber edge)
+    `<rect x="${svgX + 0.06}" y="${svgY + yOff}" width="0.88" height="0.11" rx="0.09" fill="${C_SQUEEGEE_ACCENT}"/>` +
+    // bottom water film line
+    `<rect x="${svgX + 0.09}" y="${svgY + yOff + h - 0.08}" width="0.82" height="0.06" rx="0.03" fill="rgba(100,180,230,0.35)"/>`
+  );
+}
+
+// ── Building / facade fragment ────────────────────────────────────────────────
+function building(svgX, svgY, variety) {
+  const color = (variety < 2) ? C_BLDG_A : C_BLDG_B;
+  const cx    = svgX + 0.5;
+  const cy    = svgY + 0.5;
+  const x1    = svgX + 0.10, x2 = svgX + 0.90;
+  const y1    = svgY + 0.08, y2 = svgY + 0.92;
+  // grid dividers vary by variety
+  const hLines = variety < 2
+    ? [`<line x1="${x1}" y1="${svgY + 0.38}" x2="${x2}" y2="${svgY + 0.38}" stroke="${C_BLDG_LINE}" stroke-width="0.07"/>`,
+       `<line x1="${x1}" y1="${svgY + 0.62}" x2="${x2}" y2="${svgY + 0.62}" stroke="${C_BLDG_LINE}" stroke-width="0.07"/>`]
+    : [`<line x1="${x1}" y1="${cy}" x2="${x2}" y2="${cy}" stroke="${C_BLDG_LINE}" stroke-width="0.07"/>`];
+  return (
+    `<rect x="${x1}" y="${y1}" width="0.80" height="0.84" rx="0.03" fill="${color}"/>` +
+    hLines.join('') +
+    `<line x1="${cx}" y1="${y1}" x2="${cx}" y2="${y2}" stroke="${C_BLDG_LINE}" stroke-width="0.07"/>`
+  );
+}
+
+// ── Finder pattern (window-frame style) ──────────────────────────────────────
+function finderFrame(svgX, svgY) {
+  const lc = 'rgba(255,255,255,0.55)'; // inner cross colour
+  return [
+    // outer dark 7×7
+    `<rect x="${svgX}" y="${svgY}" width="7" height="7" rx="0.18" fill="#0A2540"/>`,
+    // white 5×5
+    `<rect x="${svgX+1}" y="${svgY+1}" width="5" height="5" fill="#F5FAFE"/>`,
+    // inner dark 3×3
+    `<rect x="${svgX+2}" y="${svgY+2}" width="3" height="3" fill="#0A2540"/>`,
+    // thin cross in white space (suggests window panes)
+    `<line x1="${svgX+3.5}" y1="${svgY+1.1}" x2="${svgX+3.5}" y2="${svgY+5.9}" stroke="${lc}" stroke-width="0.12"/>`,
+    `<line x1="${svgX+1.1}" y1="${svgY+3.5}" x2="${svgX+5.9}" y2="${svgY+3.5}" stroke="${lc}" stroke-width="0.12"/>`,
+  ].join('');
+}
+
+// ─── Main SVG build ───────────────────────────────────────────────────────────
+function buildQR() {
+  const parts = [];
+
+  // White background of QR area
+  parts.push(`<rect width="${TOTAL}" height="${TOTAL}" fill="#F4FAFE" rx="0.08"/>`);
+
+  // Three finder patterns
+  parts.push(finderFrame(MARGIN, MARGIN));             // top-left  (col 0-6, row 0-6)
+  parts.push(finderFrame(MARGIN + SIZE - 7, MARGIN));  // top-right (col 26-32, row 0-6)
+  parts.push(finderFrame(MARGIN, MARGIN + SIZE - 7));  // bot-left  (col 0-6, row 26-32)
+
+  // All other modules
+  for (let r = 0; r < SIZE; r++) {
+    for (let c = 0; c < SIZE; c++) {
+      if (!M[r][c]) continue;          // light cell → skip
+      if (isFinder(r, c)) continue;    // handled above
+      if (isSeparator(r, c)) continue; // white separator → skip (already white bg)
+
+      const svgX = MARGIN + c;
+      const svgY = MARGIN + r;
+      const cx   = svgX + 0.5;
+      const cy   = svgY + 0.5;
+      const vr   = v(r, c);
+
+      // Timing pattern → small crisp dot
+      if (isTiming(r, c)) {
+        parts.push(`<circle cx="${cx}" cy="${cy}" r="0.30" fill="#0A2540"/>`);
+        continue;
+      }
+
+      // Zone classification
+      let shape = '';
+      if (r < 10) {
+        shape = drop(svgX, svgY, vr);
+      } else if (r < 20) {
+        shape = squeegee(svgX, svgY, vr);
+      } else {
+        shape = building(svgX, svgY, vr);
+      }
+      parts.push(shape);
+    }
+  }
+
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${TOTAL} ${TOTAL}" shape-rendering="auto">${parts.join('')}</svg>`;
+}
+
+document.getElementById('creative-qr').innerHTML = buildQR();
+
+// ─── Screen scaling ───────────────────────────────────────────────────────────
+function fit() {
+  const mmPx = 96 / 25.4;
+  const pw   = 297 * mmPx;
+  const ph   = 420 * mmPx;
+  const vw   = window.innerWidth  - 48;
+  const vh   = window.innerHeight - 48;
+  const scale = Math.min(vw / pw, vh / ph, 1);
+  const poster = document.getElementById('poster');
+  poster.style.transform = `scale(${scale})`;
+  document.getElementById('wrap').style.height = Math.ceil(ph * scale + 48) + 'px';
+}
+fit();
+window.addEventListener('resize', fit);
+</script>
+
+</body>
+</html>
