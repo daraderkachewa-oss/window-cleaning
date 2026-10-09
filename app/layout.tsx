@@ -53,6 +53,9 @@ export const metadata: Metadata = {
     siteName: "ИП Ямщикова — мойка фасадного остекления",
   },
   robots: { index: true, follow: true },
+  verification: {
+    yandex: "be6befabc545a0b0",
+  },
 };
 
 export const viewport: Viewport = {
